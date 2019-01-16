@@ -11,24 +11,24 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            TCPListener listener = new TCPListener();
-            TCPClient client = new TCPClient();
+            //TCPListener listener = new TCPListener();
+            TCPClient client = new TCPClient("10.160.99.76");
 
-            listener.Start();
+            //listener.Start();
 
             client.Start();
 
             client.Send("Hello World");
 
-            for(int i = 0; i < 100; i++)
+            /*for(int i = 0; i < 100; i++)
             {
                 client.Send(getRandomCoords());
-            }
-
-            listener.Close();
-            client.Close();
+            }*/
 
             Console.ReadKey();
+
+            //client.Close();
+            //listener.Close();
         }
 
         static string getRandomCoords()

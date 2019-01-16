@@ -30,9 +30,9 @@ namespace App1
             listener.Start();
 
 
-            displayMessageStatic("Listener Socket Running");
+            //displayMessageStatic("Listener Socket Running");
 
-            SetUpConnection();
+            //SetUpConnection();
 
             Console.ReadLine();
             

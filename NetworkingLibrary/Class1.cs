@@ -11,14 +11,26 @@ namespace NetworkingLibrary
 
         public const string DefaultServiceName = "22112";
 
+        public const string LocalHostName = "localhost";
+
         public static ListenerSocket GetListener()
         {
             return new ListenerSocket();
         }
 
+        public static ListenerSocket GetListener(string serviceName, iDisplayMessage messageHost)
+        {
+            return new ListenerSocket(serviceName, messageHost);
+        }
+
         public static Connection GetConnection()
         {
             return new Connection();
+        }
+
+        public static Connection GetConnection(string serviceName, string hostName, iDisplayMessage messageHost)
+        {
+            return new Connection(serviceName, hostName, messageHost);
         }
 
         public static Connection GetConnection(iDisplayMessage MessageHostingService)

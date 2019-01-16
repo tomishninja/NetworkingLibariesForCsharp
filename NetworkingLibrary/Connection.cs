@@ -16,8 +16,6 @@ namespace NetworkingLibrary
         private State currentState = State.Created;
         public State CurrentState { get => currentState; }
 
-        public const string LocalHostName = "localhost";
-
         public readonly string serviceName = null;
         public readonly string hostName = null;
 
@@ -30,13 +28,20 @@ namespace NetworkingLibrary
         public Connection()
         {
             this.serviceName = Class1.DefaultServiceName;
-            this.hostName = LocalHostName;
+            this.hostName = Class1.LocalHostName;
         }
 
         public Connection(iDisplayMessage messageHost)
         {
             this.serviceName = Class1.DefaultServiceName;
-            this.hostName = LocalHostName;
+            this.hostName = Class1.LocalHostName;
+            this.MessageHost = messageHost;
+        }
+
+        public Connection(string serviceName, string hostName, iDisplayMessage messageHost)
+        {
+            this.serviceName = serviceName;
+            this.hostName = hostName;
             this.MessageHost = messageHost;
         }
 
@@ -63,7 +68,7 @@ namespace NetworkingLibrary
             // add the behaviour for the listener
             this.Server.MessageReceived += MessageReceived;
 
-            NotifyUserFromAsyncThread("Connecting to " + this.hostName);
+            //NotifyUserFromAsyncThread("Connecting to " + this.hostName);
 
             try
             {
@@ -95,7 +100,7 @@ namespace NetworkingLibrary
             try
             {
                 await Writer.StoreAsync();
-                this.NotifyUserFromAsyncThread("Message has been sent");
+                //this.NotifyUserFromAsyncThread("Message has been sent");
 
             }
             catch(Exception exception)
