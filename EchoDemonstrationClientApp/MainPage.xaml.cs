@@ -26,23 +26,24 @@ namespace EchoDemonstrationClientApp
         public MainPage()
         {
             this.InitializeComponent();
-        }
-
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
             this.TextBoxPortNumber.Text = Class1.DefaultServiceName;
             this.TextBoxIPAddress.Text = Class1.LocalHostName;
             this.MessageToSendTexBox.Text = "HelloWorld";
         }
 
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             SetUpConnection();
+
         }
 
         public async void SetUpConnection()
         {
-            Connection connection = Class1.GetConnection(this);
+            Connection connection = Class1.GetConnection(this.TextBoxPortNumber.Text, this.TextBoxIPAddress.Text, this);
             await connection.StartAsync();
             connection.Send(MessageToSendTexBox.Text);
         }
