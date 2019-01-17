@@ -18,21 +18,20 @@ namespace App1
         {
             Program program = new Program();
             program.RunHelloWorldTest();
-
         }
 
         public void RunHelloWorldTest()
         {
-            displayMessageStatic("Starting:");
+            //displayMessageStatic("Starting:");
 
             // start the listener socket
-            ListenerSocket listener = Class1.GetListener(this);
-            listener.Start();
+            //ListenerSocket listener = Class1.GetListener(this);
+            //listener.Start();
 
 
             //displayMessageStatic("Listener Socket Running");
 
-            //SetUpConnection();
+            SetUpConnection();
 
             Console.ReadLine();
             
@@ -40,9 +39,9 @@ namespace App1
 
         public async void SetUpConnection()
         {
-            Connection connection = Class1.GetConnection(this);
-            await connection.StartAsync();
+            Connection connection = Class1.GetConnection(Class1.DefaultServiceName, "10.160.98.35",this);
             displayMessageStatic("Connection Running");
+            await connection.StartAsync();
 
             displayMessageStatic("Sending Messages");
             connection.Send("HelloWorld");

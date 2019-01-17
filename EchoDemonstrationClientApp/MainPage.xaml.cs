@@ -52,6 +52,11 @@ namespace EchoDemonstrationClientApp
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
+                // removes all of the null specifiers from the string
+                // This is an issue when converting strings to bytes and back to strings
+                message = message.Replace("\0", "");
+
+                // Upadate the Message Text box
                 MessageRecived.Text = message;
             });
         }

@@ -12,7 +12,7 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             //TCPListener listener = new TCPListener();
-            TCPClient client = new TCPClient("10.160.99.76");
+            TCPClient client = new TCPClient("10.160.98.35");
 
             //listener.Start();
 

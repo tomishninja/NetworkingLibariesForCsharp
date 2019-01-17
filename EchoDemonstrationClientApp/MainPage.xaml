@@ -22,7 +22,9 @@
             <TextBox x:Name="MessageToSendTexBox"></TextBox>
             <Button Click="Button_Click">Send Message</Button>
             <TextBlock>Recived:</TextBlock>
-            <TextBox IsReadOnly="True" x:Name="MessageRecived"></TextBox>
+            <TextBox IsReadOnly="True" x:Name="MessageRecived" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Visible">
+                
+            </TextBox>
         </StackPanel>
     </Grid>
 </Page>
