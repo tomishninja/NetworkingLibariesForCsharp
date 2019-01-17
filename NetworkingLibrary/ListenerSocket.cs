@@ -159,11 +159,14 @@ namespace NetworkingLibrary
 
             string receivedMessage = null;
             // Interpret the incoming datagram's entire contents as a string.
-            uint stringLength = eventArguments.GetDataReader().UnconsumedBufferLength;
-            receivedMessage = eventArguments.GetDataReader().ReadString(stringLength);
 
             try
             {
+                // get the message
+                uint stringLength = eventArguments.GetDataReader().UnconsumedBufferLength;
+                receivedMessage = eventArguments.GetDataReader().ReadString(stringLength);
+
+                // Data Writer
                 IDataWriter dataWriter = new DataWriter();
                 dataWriter.WriteBytes(Encoding.Unicode.GetBytes(receivedMessage));
                 await peer.OutputStream.WriteAsync(dataWriter.DetachBuffer());
