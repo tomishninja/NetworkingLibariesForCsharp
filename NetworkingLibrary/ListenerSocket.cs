@@ -157,9 +157,16 @@ namespace NetworkingLibrary
                         peer));
             }*/
 
+            string receivedMessage = null;
+            // Interpret the incoming datagram's entire contents as a string.
+            uint stringLength = eventArguments.GetDataReader().UnconsumedBufferLength;
+            receivedMessage = eventArguments.GetDataReader().ReadString(stringLength);
+
             try
             {
-                await peer.OutputStream.WriteAsync(eventArguments.GetDataReader().DetachBuffer());
+                IDataWriter dataWriter = new DataWriter();
+                dataWriter.WriteBytes(Encoding.Unicode.GetBytes(receivedMessage));
+                await peer.OutputStream.WriteAsync(dataWriter.DetachBuffer());
             }
             catch (Exception exception)
             {
@@ -170,6 +177,33 @@ namespace NetworkingLibrary
                 }
 
                 NotifyUserFromAsyncThread("Send failed with error: " + exception.Message);
+            }
+            
+            // display message
+            try
+            {
+                NotifyUserFromAsyncThread(  "Received data: \"" + receivedMessage + "\"");
+            }
+            catch (Exception exception)
+            {
+                SocketErrorStatus socketError = SocketError.GetStatus(exception.HResult);
+                if (socketError == SocketErrorStatus.ConnectionResetByPeer)
+                {
+                    // This error would indicate that a previous send operation resulted in an 
+                    // ICMP "Port Unreachable" message.
+                    NotifyUserFromAsyncThread(
+                        "Peer does not listen on the specific port. Please make sure that you run step 1 first " +
+                        "or you have a server properly working on a remote server.");
+                }
+                else if (socketError != SocketErrorStatus.Unknown)
+                {
+                    NotifyUserFromAsyncThread(
+                        "Error happened when receiving a datagram: " + socketError.ToString());
+                }
+                else
+                {
+                    throw;
+                }
             }
         }
 
