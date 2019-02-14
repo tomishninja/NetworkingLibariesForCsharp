@@ -19,8 +19,8 @@ namespace NetworkingLibaryStandard
 
         public TCPListener()
         {
-            PortNumber = Class1.DefaultPortNumber;
-            ipAddress = IPAddress.Parse(Class1.LocalHostString);
+            PortNumber = NetworkingLibary.DefaultPortNumber;
+            ipAddress = IPAddress.Parse(NetworkingLibary.LocalHostString);
             this.Server = new TcpListener(this.ipAddress, this.PortNumber);
         }
 

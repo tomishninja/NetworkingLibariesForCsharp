@@ -21,14 +21,14 @@ namespace NetworkingLibaryStandard
         {
             EndPoint = new IPEndPoint(IPAddress.Any, 0);
 
-            this.EndpointClient = new System.Net.Sockets.UdpClient(Class1.DefaultPortNumber);
+            this.EndpointClient = new System.Net.Sockets.UdpClient(NetworkingLibary.DefaultPortNumber);
         }
 
         public UDPListener(IDisplayMessage messageSystem)
         {
             this.messageSystem = messageSystem;
 
-            this.EndpointClient = new System.Net.Sockets.UdpClient(Class1.DefaultPortNumber);
+            this.EndpointClient = new System.Net.Sockets.UdpClient(NetworkingLibary.DefaultPortNumber);
         }
 
         public void Start()

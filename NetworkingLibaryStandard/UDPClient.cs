@@ -14,19 +14,19 @@ namespace NetworkingLibaryStandard
 
         public UDPClient()
         {
-            this.portNumber = Class1.DefaultPortNumber;
-            this.hostAddress = Class1.LocalHostString;
+            this.portNumber = NetworkingLibary.DefaultPortNumber;
+            this.hostAddress = NetworkingLibary.LocalHostString;
         }
 
         public UDPClient(int portNumber)
         {
             this.portNumber = portNumber;
-            this.hostAddress = Class1.LocalHostString;
+            this.hostAddress = NetworkingLibary.LocalHostString;
         }
 
         public UDPClient(string hostAddress)
         {
-            this.portNumber = Class1.DefaultPortNumber;
+            this.portNumber = NetworkingLibary.DefaultPortNumber;
             this.hostAddress = hostAddress;
         }
 
