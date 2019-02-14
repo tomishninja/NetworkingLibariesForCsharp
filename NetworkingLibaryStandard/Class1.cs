@@ -2,7 +2,7 @@
 
 namespace NetworkingLibaryStandard
 {
-    public class Class1
+    public class NetworkingLibaryStandard
     {
         public const int DefaultPortNumber = 22112;
 

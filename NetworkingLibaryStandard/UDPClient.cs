@@ -43,8 +43,8 @@ namespace NetworkingLibaryStandard
         /// </summary>
         public UDPClient()
         {
-            this.portNumber = Class1.DefaultPortNumber;
-            this.hostAddress = Class1.LocalHostString;
+            this.portNumber = NetworkingLibaryStandard.DefaultPortNumber;
+            this.hostAddress = NetworkingLibaryStandard.LocalHostString;
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace NetworkingLibaryStandard
 
             // set the values
             this.portNumber = portNumber;
-            this.hostAddress = Class1.LocalHostString;
+            this.hostAddress = NetworkingLibaryStandard.LocalHostString;
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace NetworkingLibaryStandard
         public UDPClient(string hostAddress)
         {
             //TODO check that the host address is valid
-            this.portNumber = Class1.DefaultPortNumber;
+            this.portNumber = NetworkingLibaryStandard.DefaultPortNumber;
             this.hostAddress = hostAddress;
         }
 

@@ -38,9 +38,9 @@ namespace NetworkingLibaryStandard
         /// </summary>
         public TCPClient()
         {
-            this.PortNumber = Class1.DefaultPortNumber;
+            this.PortNumber = NetworkingLibaryStandard.DefaultPortNumber;
 
-            this.ServerHostName = Class1.LocalHostString;
+            this.ServerHostName = NetworkingLibaryStandard.LocalHostString;
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace NetworkingLibaryStandard
             //TODO: validate the host name
 
             // set the values
-            this.PortNumber = Class1.DefaultPortNumber;
+            this.PortNumber = NetworkingLibaryStandard.DefaultPortNumber;
             this.ServerHostName = hostName;
         }
 
