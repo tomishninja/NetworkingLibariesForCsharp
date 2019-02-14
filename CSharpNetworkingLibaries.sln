@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EchoDemonstrationListenerAp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EchoDemonstrationClientApp", "EchoDemonstrationClientApp\EchoDemonstrationClientApp.csproj", "{5D29321C-534A-4C74-9A39-16B06FEF23AD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demonstations", "Demonstations", "{D432D3C7-88E2-4A78-997B-C854E26D943E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

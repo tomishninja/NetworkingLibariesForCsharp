@@ -123,6 +123,7 @@
     <Compile Include="Class1.cs" />
     <Compile Include="Connection.cs" />
     <Compile Include="iDisplayMessage.cs" />
+    <Compile Include="IResponder.cs" />
     <Compile Include="ListenerSocket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\NetworkingLibrary.rd.xml" />
