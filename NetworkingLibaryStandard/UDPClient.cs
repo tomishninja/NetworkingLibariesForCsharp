@@ -6,7 +6,8 @@ using System.Text;
 namespace NetworkingLibaryStandard
 {
     /// <summary>
-    /// 
+    /// This object represents the client side of a 
+    /// UDP connection
     /// </summary>
     public class UDPClient
     {
