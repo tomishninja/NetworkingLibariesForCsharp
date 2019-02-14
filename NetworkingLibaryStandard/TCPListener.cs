@@ -5,18 +5,44 @@ using System.Threading;
 
 namespace NetworkingLibaryStandard
 {
+    /// <summary>
+    /// The server side of the network connection. 
+    /// This side of the tcp is capable of listening
+    /// and reacting even to responding
+    /// </summary>
     public class TCPListener
     {
+        /// <summary>
+        /// Tcp listener object that will represent the server.
+        /// This object will give this object access to its network
+        /// functionality
+        /// </summary>
         readonly TcpListener Server = null;
 
+        /// <summary>
+        /// The port number that this server is listening on. 
+        /// </summary>
         readonly int PortNumber = 0;
 
+        /// <summary>
+        /// So far only tested using localhost.
+        /// </summary>
         readonly IPAddress ipAddress = null;
 
+        /// <summary>
+        /// The thead that will hold the listener behaviour
+        /// </summary>
         Thread listenerThread = null;
 
+        /// <summary>
+        /// This boolen determine weather or not the sytem is running and
+        /// listening to client threads.
+        /// </summary>
         private bool IsListening = false;
 
+        /// <summary>
+        /// Defualt constuctor for the TCP object
+        /// </summary>
         public TCPListener()
         {
             PortNumber = Class1.DefaultPortNumber;
@@ -24,19 +50,35 @@ namespace NetworkingLibaryStandard
             this.Server = new TcpListener(this.ipAddress, this.PortNumber);
         }
 
+        /// <summary>
+        /// This function starts the object.
+        /// Triggering this function should allow 
+        /// this object to begin listening to its clients.
+        /// Two listener theads may not be created using this
+        /// method.
+        /// </summary>
         public void Start()
         {
-            // start the server
-            this.Server.Start();
+            if (this.IsListening == false)
+            {
+                // start the server
+                this.Server.Start();
 
-            // start a listening thread for the object
-            listenerThread = new Thread(Listen);
-            listenerThread.Start();
+                // set the while loop condition for the listen thread to true
+                // so the loop will continue to run indefinatly. 
+                IsListening = true;
 
-            IsListening = true;
+                // start a listening thread for the object
+                listenerThread = new Thread(Listen);
+                listenerThread.Start();
+            }
         }
-
-        void Listen()
+        
+        /// <summary>
+        /// this function should only be run in its own thread. It is triggered
+        /// by the start function. 
+        /// </summary>
+        private void Listen()
         {
             // Buffer for reading data
             Byte[] bytes = new Byte[256];
@@ -44,6 +86,8 @@ namespace NetworkingLibaryStandard
 
             try
             {
+                // keep listening until the user is done with this object or until a
+                // exception is thrown
                 while (IsListening)
                 {
                     // the command will sit and wait until you can connect
@@ -91,18 +135,40 @@ namespace NetworkingLibaryStandard
             }
         }
 
-        void Respond(NetworkStream stream, byte[] msg, string data)
+        /// <summary>
+        /// This method is designed to be inherited and should not be called 
+        /// by the user as it is not desinged for it.
+        /// 
+        /// This method is designed to respond to a message from the client.
+        /// by default this method will do nothing.
+        /// </summary>
+        /// <param name="stream">
+        /// The network stream object recived from the client sending the data
+        /// </param>
+        /// <param name="msg">
+        /// the bytes that created the message
+        /// </param>
+        /// <param name="data">
+        /// A string represention of the message reviced
+        /// </param>
+        public virtual void Respond(NetworkStream stream, byte[] msg, string data)
         {
             // Send back a response.
             //stream.Write(msg, 0, msg.Length);
             //Console.WriteLine("Sent: {0}", data);
         }
 
+        /// <summary>
+        /// this function will stop this object
+        /// from listening to clients on this stream.
+        /// </summary>
         public void Close()
         {
+            // if the sever exists stop it
             if (Server != null)
                 this.Server.Stop();
 
+            // this will stop the loop created by the Listen function
             IsListening = false;
         }
 
