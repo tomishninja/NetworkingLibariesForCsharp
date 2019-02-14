@@ -1,36 +1,87 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Threading;
 
 namespace NetworkingLibaryStandard
 {
+    /// <summary>
+    /// This object represents a UDP server or listener object.
+    /// </summary>
     public class UDPListener
     {
+        /// <summary>
+        /// A object that represents a networks end point
+        /// This object basicly just stops packets from passing by
+        /// This object usally has this object checking all UDP packets it gets
+        /// so it isn't a very strict endpoint
+        /// </summary>
         IPEndPoint EndPoint = null;
+        
+        /// <summary>
+        /// This object represents the client at the end of the network
+        /// acting as a listener
+        /// </summary>
         readonly System.Net.Sockets.UdpClient EndpointClient = null;
 
+        /// <summary>
+        /// This feild will keep the the listener running until the end unless 
+        /// there are any future issues
+        /// </summary>
         bool IsConnected = false;
 
+        /// <summary>
+        /// This will contain the object that can recive messages from this
+        /// object while it is operating
+        /// </summary>
         IDisplayMessage messageSystem = null;
 
+        /// <summary>
+        /// This object allows for different methods of responces with data.
+        /// </summary>
+        IResponder responder = null;
+
+        /// <summary>
+        /// A lock to create a queue for messages if they are recived 
+        /// in rapid succession. found in the responce function.
+        /// </summary>
         private static object ResponceLock = new object();
 
+        /// <summary>
+        /// The default constuctor for hte UDP listener
+        /// </summary>
         public UDPListener()
         {
+            // Set up a end point that dosn't exclued any possible end points
             EndPoint = new IPEndPoint(IPAddress.Any, 0);
 
+            // set up the end point client
             this.EndpointClient = new System.Net.Sockets.UdpClient(Class1.DefaultPortNumber);
         }
 
+        /// <summary>
+        /// a version of the default constuctor that allows for messages to be sent to the UI
+        /// </summary>
+        /// <param name="messageSystem">
+        /// This will be a object that has implemented the IDisplayMessage interface. 
+        /// This object will beable to recive messages created by this sytem at run time.
+        /// </param>
         public UDPListener(IDisplayMessage messageSystem)
         {
+            // set up a end point that dosn't exclued any possible end points
+            EndPoint = new IPEndPoint(IPAddress.Any, 0);
+
+            // The object that will be used to transmit messages
             this.messageSystem = messageSystem;
 
+            // The endpoint client that will be used for all network functionality in this class
             this.EndpointClient = new System.Net.Sockets.UdpClient(Class1.DefaultPortNumber);
         }
 
+        /// <summary>
+        /// Starts the object and creates a new thread 
+        /// dedicated to listening
+        /// </summary>
         public void Start()
         {
             // start a listening thread for the object
@@ -39,8 +90,13 @@ namespace NetworkingLibaryStandard
             listenerThread.Start();
         }
 
+        /// <summary>
+        /// triggered from the start funciton and run in it's own thread.
+        /// </summary>
         private void Listen()
         {
+            // keep looping over the listener code until the IsConnnected veriable
+            // changes or a exception is triggered
             try
             {
                 while (this.IsConnected)
@@ -54,8 +110,8 @@ namespace NetworkingLibaryStandard
                         messageSystem.DisplayMessage(MessageHelper.MessageType.Data, returnData);
                     }
 
-                    // an overiable method 
-                    //Responce(returnData, ref this.EndPoint);
+                    // will activiate the responder if nessarcary 
+                    Responce(returnData, ref this.EndPoint);
                 }
             }
             catch (Exception ex)
@@ -67,16 +123,40 @@ namespace NetworkingLibaryStandard
             }
         }
 
-        void Responce(string dataRecived, ref IPEndPoint endpoint)
+        /// <summary>
+        /// this method is triggered by the listen function. it's main job is to saftly call
+        /// the respond mehtod if it exists.
+        /// </summary>
+        /// <param name="dataRecived">
+        /// this is a string represention of the 
+        /// </param>
+        /// <param name="endpoint">
+        /// The IP endpoint that needs to be used. In this class it will be the 
+        /// instace verible generally. 
+        /// </param>
+        private void Responce(string dataRecived, ref IPEndPoint endpoint)
         {
-            lock (ResponceLock)
+            //
+            if (responder != null)
             {
-                byte[] data = Encoding.Unicode.GetBytes(dataRecived);
-                this.EndpointClient.SendAsync(data, data.Length);
+                // create a lock on this so there are no collisons or erros
+                lock (ResponceLock)
+                {
+                    // call the responder method to send the new information
+                    responder.Respond(dataRecived, this.EndpointClient);
+
+                    // Code to echo back a responce
+                    //byte[] data = Encoding.Unicode.GetBytes(dataRecived);
+                    //this.EndpointClient.SendAsync(data, data.Length);
+                }
             }
+            
             
         }
 
+        /// <summary>
+        /// Stops the listener and deactivates the method
+        /// </summary>
         public void Stop()
         {
             this.IsConnected = false;
