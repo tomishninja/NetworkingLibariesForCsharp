@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace NetworkingLibrary
 {
-    public interface IDisplayMessage
+    interface IResponder
     {
-        void DisplayMessage(string message);
+        void Respond(string MessageRecived);
     }
 }

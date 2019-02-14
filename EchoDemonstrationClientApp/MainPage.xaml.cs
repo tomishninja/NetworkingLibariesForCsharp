@@ -21,13 +21,13 @@ namespace EchoDemonstrationClientApp
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page, iDisplayMessage 
+    public sealed partial class MainPage : Page, IDisplayMessage 
     {
         public MainPage()
         {
             this.InitializeComponent();
-            this.TextBoxPortNumber.Text = Class1.DefaultServiceName;
-            this.TextBoxIPAddress.Text = Class1.LocalHostName;
+            this.TextBoxPortNumber.Text = NetworkingLibaryCore.DefaultServiceName;
+            this.TextBoxIPAddress.Text = NetworkingLibaryCore.LocalHostName;
             this.MessageToSendTexBox.Text = "HelloWorld";
         }
 
@@ -43,7 +43,7 @@ namespace EchoDemonstrationClientApp
 
         public async void SetUpConnection()
         {
-            Connection connection = Class1.GetConnection(this.TextBoxPortNumber.Text, this.TextBoxIPAddress.Text, this);
+            Connection connection = NetworkingLibaryCore.GetConnection(this.TextBoxPortNumber.Text, this.TextBoxIPAddress.Text, this);
             await connection.StartAsync();
             connection.Send(MessageToSendTexBox.Text);
         }

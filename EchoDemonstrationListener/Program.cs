@@ -10,7 +10,7 @@ using NetworkingLibrary;
 
 namespace EchoDemonstrationListener
 {
-    class Program : iDisplayMessage
+    class Program : IDisplayMessage
     {
         private static readonly Object obj = new Object();
 
@@ -22,7 +22,7 @@ namespace EchoDemonstrationListener
 
         public void run()
         {
-            ListenerSocket listener = Class1.GetListener(this);
+            ListenerSocket listener = NetworkingLibaryCore.GetListener(this);
             listener.Start();
 
             Console.ReadLine();

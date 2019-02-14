@@ -11,7 +11,7 @@ namespace EchoDemonstration
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page, iDisplayMessage
+    public sealed partial class MainPage : Page, IDisplayMessage
     {
         private static readonly Object obj = new Object();
 
@@ -28,7 +28,7 @@ namespace EchoDemonstration
         private void LocalHostDemo()
         {
             // start the listener socket
-            ListenerSocket listener = Class1.GetListener(this);
+            ListenerSocket listener = NetworkingLibaryCore.GetListener(this);
             listener.Start();
 
             SetUpConnection();
@@ -36,7 +36,7 @@ namespace EchoDemonstration
 
         public async void SetUpConnection()
         {
-            Connection connection = Class1.GetConnection(this);
+            Connection connection = NetworkingLibaryCore.GetConnection(this);
             await connection.StartAsync();
             connection.Send(MessageToSendTexBox.Text);
         }

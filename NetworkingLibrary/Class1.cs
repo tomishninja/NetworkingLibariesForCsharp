@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NetworkingLibrary
 {
-    public class Class1
+    public class NetworkingLibaryCore
     {
 
         public const string DefaultServiceName = "22112";
@@ -18,7 +18,7 @@ namespace NetworkingLibrary
             return new ListenerSocket();
         }
 
-        public static ListenerSocket GetListener(string serviceName, iDisplayMessage messageHost)
+        public static ListenerSocket GetListener(string serviceName, IDisplayMessage messageHost)
         {
             return new ListenerSocket(serviceName, messageHost);
         }
@@ -28,17 +28,17 @@ namespace NetworkingLibrary
             return new Connection();
         }
 
-        public static Connection GetConnection(string serviceName, string hostName, iDisplayMessage messageHost)
+        public static Connection GetConnection(string serviceName, string hostName, IDisplayMessage messageHost)
         {
             return new Connection(serviceName, hostName, messageHost);
         }
 
-        public static Connection GetConnection(iDisplayMessage MessageHostingService)
+        public static Connection GetConnection(IDisplayMessage MessageHostingService)
         {
             return new Connection(MessageHostingService);
         }
 
-        public static ListenerSocket GetListener(iDisplayMessage MessageHostingService)
+        public static ListenerSocket GetListener(IDisplayMessage MessageHostingService)
         {
             return new ListenerSocket(MessageHostingService);
         }

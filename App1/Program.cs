@@ -10,7 +10,7 @@ using NetworkingLibrary;
 
 namespace App1
 {
-    class Program : iDisplayMessage
+    class Program : IDisplayMessage
     {
         private static readonly Object obj = new Object();
         
@@ -39,7 +39,7 @@ namespace App1
 
         public async void SetUpConnection()
         {
-            Connection connection = Class1.GetConnection(Class1.DefaultServiceName, "10.160.98.35",this);
+            Connection connection = NetworkingLibaryCore.GetConnection(NetworkingLibaryCore.DefaultServiceName, "10.160.98.35",this);
             displayMessageStatic("Connection Running");
             await connection.StartAsync();
 

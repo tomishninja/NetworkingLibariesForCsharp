@@ -21,12 +21,12 @@ namespace EchoDemonstrationListenerApp
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page, iDisplayMessage
+    public sealed partial class MainPage : Page, IDisplayMessage
     {
         public MainPage()
         {
             this.InitializeComponent();
-            ListenerSocket listener = Class1.GetListener(this);
+            ListenerSocket listener = NetworkingLibaryCore.GetListener(this);
             listener.Start();
         }
 

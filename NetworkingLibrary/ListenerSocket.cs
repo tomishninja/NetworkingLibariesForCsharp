@@ -14,44 +14,97 @@ namespace NetworkingLibrary
 {
     public class ListenerSocket
     {
+        /// <summary>
+        /// Contains all of the states this network connection can trasfer though
+        /// </summary>
         public enum State { Created, Started, Listening, Stoped };
 
+        /// <summary>
+        /// provides the current state of the system as a State enum
+        /// </summary>
         private State currentState = State.Created;
+
+        /// <summary>
+        /// provides the current state of the system as a State enum
+        /// </summary>
         public State CurrentState { get => currentState; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private DatagramSocket Listener = new DatagramSocket();
 
-        // List containing all available local HostName endpoints
+        /// <summary>
+        /// List containing all available local HostName endpoints
+        /// </summary>
         private List<LocalHostItem> localHostItems = new List<LocalHostItem>();
 
+        /// <summary>
+        /// A string represention of the port number that will be used
+        /// </summary>
         readonly string ServiceName = null;
-        readonly iDisplayMessage MessageHost = null;
 
+        /// <summary>
+        /// If this object isn't null it will give this libary a method of 
+        /// comminicating with the rest of the system.
+        /// </summary>
+        readonly IDisplayMessage MessageHost = null;
+
+        /// <summary>
+        /// the default constuctor for this object. This constuctor will assume 
+        /// that there are no messages or responces that need to work and 
+        /// the system will use it's default port from the main class
+        /// </summary>
         public ListenerSocket()
         {
-            this.ServiceName = Class1.DefaultServiceName;
+            this.ServiceName = NetworkingLibaryCore.DefaultServiceName;
         }
 
-        public ListenerSocket(iDisplayMessage messageHost)
+        /// <summary>
+        /// this constuctor uses the default port from the main class
+        /// but allows for messages to be sent to a object implementing 
+        /// the IDisplayMessage interface
+        /// </summary>
+        /// <param name="messageHost">
+        /// The object that implements the IDisplayMessage interface.
+        /// </param>
+        public ListenerSocket(IDisplayMessage messageHost)
         {
             this.MessageHost = messageHost;
-            this.ServiceName = Class1.DefaultServiceName;
+            this.ServiceName = NetworkingLibaryCore.DefaultServiceName;
         }
 
-        public ListenerSocket(string serviceName, iDisplayMessage messageHost)
+        /// <summary>
+        /// Creates a listener socket were the port number or service name
+        /// can be chosen and it is capable of reciving messages though an
+        /// object that implements the IDisplayMessage Class
+        /// </summary>
+        /// <param name="serviceName">
+        /// 
+        /// </param>
+        /// <param name="messageHost">
+        /// 
+        /// </param>
+        public ListenerSocket(string serviceName, IDisplayMessage messageHost)
         {
             this.ServiceName = serviceName;
             this.MessageHost = messageHost;
         }
 
+        /// <summary>
+        /// A constutor that allows for the port number or service name 
+        /// to be changed without any messages or responce options.
+        /// </summary>
+        /// <param name="serviceName">
+        /// A string object represting the Service name or port number
+        /// </param>
         public ListenerSocket(string serviceName)
         {
             this.ServiceName = serviceName;
         }
 
-
         /// <summary>
-        /// 
+        /// Starts the listener object.
         /// </summary>
         /// <exception cref="Exception">
         /// Will throw a generic exception when there are issues with the listener
@@ -84,12 +137,18 @@ namespace NetworkingLibrary
         }
 
         /// <summary>
-        /// Message received handler
+        /// Message received listener. Once the object has started this listener will
+        /// activate during each message that is recived.
         /// </summary>
-        /// <param name="socket">The socket object</param>
-        /// <param name="eventArguments">The datagram event information</param>
+        /// <param name="socket">
+        /// The socket object
+        /// </param>
+        /// <param name="eventArguments">
+        /// The datagram event information
+        /// </param>
         async void MessageReceived(DatagramSocket socket, DatagramSocketMessageReceivedEventArgs eventArguments)
         {
+            // 
             object outObj;
             if (CoreApplication.Properties.TryGetValue("remotePeer", out outObj))
             {
@@ -119,7 +178,7 @@ namespace NetworkingLibrary
                         CoreApplication.Properties.Add("remotePeer", peer);
                     }
                 }
-
+                
                 EchoMessage(peer, eventArguments);
             }
             catch (Exception exception)
@@ -143,20 +202,6 @@ namespace NetworkingLibrary
         /// <param name="eventArguments">The received message event arguments</param>
         async void EchoMessage(RemotePeer peer, DatagramSocketMessageReceivedEventArgs eventArguments)
         {
-            /*if (!peer.IsMatching(eventArguments.RemoteAddress, eventArguments.RemotePort))
-            {
-                // In the sample we are communicating with just one peer. To communicate with multiple peers, an
-                // application should cache output streams (e.g., by using a hash map), because creating an output
-                // stream for each received datagram is costly. Keep in mind though, that every cache requires logic
-                // to remove old or unused elements; otherwise, the cache will turn into a memory leaking structure.
-                NotifyUserFromAsyncThread(
-                    String.Format(
-                        "Got datagram from {0}:{1}, but already 'connected' to {2}",
-                        eventArguments.RemoteAddress,
-                        eventArguments.RemotePort,
-                        peer));
-            }*/
-
             string receivedMessage = null;
             // Interpret the incoming datagram's entire contents as a string.
 

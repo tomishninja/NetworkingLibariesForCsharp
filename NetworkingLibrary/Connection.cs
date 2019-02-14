@@ -19,7 +19,7 @@ namespace NetworkingLibrary
         public readonly string serviceName = null;
         public readonly string hostName = null;
 
-        readonly iDisplayMessage MessageHost = null;
+        readonly IDisplayMessage MessageHost = null;
 
         private DatagramSocket Server = null;
 
@@ -27,18 +27,18 @@ namespace NetworkingLibrary
 
         public Connection()
         {
-            this.serviceName = Class1.DefaultServiceName;
-            this.hostName = Class1.LocalHostName;
+            this.serviceName = NetworkingLibaryCore.DefaultServiceName;
+            this.hostName = NetworkingLibaryCore.LocalHostName;
         }
 
-        public Connection(iDisplayMessage messageHost)
+        public Connection(IDisplayMessage messageHost)
         {
-            this.serviceName = Class1.DefaultServiceName;
-            this.hostName = Class1.LocalHostName;
+            this.serviceName = NetworkingLibaryCore.DefaultServiceName;
+            this.hostName = NetworkingLibaryCore.LocalHostName;
             this.MessageHost = messageHost;
         }
 
-        public Connection(string serviceName, string hostName, iDisplayMessage messageHost)
+        public Connection(string serviceName, string hostName, IDisplayMessage messageHost)
         {
             this.serviceName = serviceName;
             this.hostName = hostName;
