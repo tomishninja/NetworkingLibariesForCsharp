@@ -54,7 +54,7 @@ namespace NetworkingLibaryStandard
         {
             // Set up a end point that dosn't exclued any possible end points
             EndPoint = new IPEndPoint(IPAddress.Any, 0);
-
+            
             // set up the end point client
             this.EndpointClient = new System.Net.Sockets.UdpClient(NetworkingLibaryStandard.DefaultPortNumber);
         }
@@ -73,7 +73,7 @@ namespace NetworkingLibaryStandard
 
             // The object that will be used to transmit messages
             this.messageSystem = messageSystem;
-
+            
             // The endpoint client that will be used for all network functionality in this class
             this.EndpointClient = new System.Net.Sockets.UdpClient(NetworkingLibaryStandard.DefaultPortNumber);
         }
