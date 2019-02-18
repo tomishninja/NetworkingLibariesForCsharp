@@ -346,7 +346,7 @@ namespace NetworkingLibrary
             }
 
             /// <summary>
-            /// 
+            /// Getter for the Ouptut stream
             /// </summary>
             public IOutputStream OutputStream
             {
@@ -372,18 +372,34 @@ namespace NetworkingLibrary
         /// </summary>
         class LocalHostItem
         {
+            /// <summary>
+            /// gets a string object that descibes this object in a readable fashion
+            /// </summary>
             public string DisplayString
             {
                 get;
                 private set;
             }
 
+            /// <summary>
+            /// gets the hostName object containing the local host
+            /// </summary>
             public HostName LocalHost
             {
                 get;
                 private set;
             }
 
+            /// <summary>
+            /// Constuctor for the helper object. 
+            /// </summary>
+            /// <param name="localHostName">
+            /// The host name for the local host object
+            /// </param>
+            /// <exception cref="ArgumentNullException">
+            /// will be thrown if the host name is null or if
+            /// the hostNames IP information is null.
+            /// </exception>
             public LocalHostItem(HostName localHostName)
             {
                 if (localHostName == null)
