@@ -168,6 +168,9 @@ namespace NetworkingLibrary
                 RemotePeer peer;
                 lock (this)
                 {
+                    // get the other client or peer out of the applicaition properties if it exists.
+                    // if it dosn't exist there create a new peer from avalible information and
+                    // save it to the properties.
                     if (CoreApplication.Properties.TryGetValue("remotePeer", out outObj))
                     {
                         peer = (RemotePeer)outObj;
@@ -179,6 +182,7 @@ namespace NetworkingLibrary
                     }
                 }
                 
+                // Send the echo message to the responder
                 EchoMessage(peer, eventArguments);
             }
             catch (Exception exception)
@@ -189,6 +193,7 @@ namespace NetworkingLibrary
                     throw;
                 }
 
+                // if there is an exception send it to the view if possible
                 NotifyUserFromAsyncThread("Connect failed with error: " + exception.Message);
             }
         }
@@ -224,7 +229,8 @@ namespace NetworkingLibrary
                     throw;
                 }
 
-                NotifyUserFromAsyncThread("Send failed with error: " + exception.Message);
+                // send this expection to the view
+                NotifyUserFromAsyncThread("Send failed with Exception: " + exception.Message);
             }
             
             // display message
@@ -234,6 +240,7 @@ namespace NetworkingLibrary
             }
             catch (Exception exception)
             {
+                // if trying to 
                 SocketErrorStatus socketError = SocketError.GetStatus(exception.HResult);
                 if (socketError == SocketErrorStatus.ConnectionResetByPeer)
                 {
@@ -268,6 +275,9 @@ namespace NetworkingLibrary
             }
         }
 
+        /// <summary>
+        /// Close this object so it no longer keeps using its thread or memory
+        /// </summary>
         public void Close()
         {
             this.Listener.Dispose();
@@ -278,10 +288,36 @@ namespace NetworkingLibrary
         /// </summary>
         class RemotePeer
         {
-            IOutputStream outputStream;
-            HostName hostName;
-            String port;
+            /// <summary>
+            /// This will contain the bytes that are being sent via
+            /// the network.
+            /// </summary>
+            readonly IOutputStream outputStream;
 
+            /// <summary>
+            /// This is the URL the string local host or the ipaddress
+            /// stored within an object that is capable of acting like a
+            /// host
+            /// </summary>
+            readonly HostName hostName;
+
+            /// <summary>
+            /// The port number represented by a string
+            /// </summary>
+            readonly String port;
+
+            /// <summary>
+            /// Builds a remote peer so it can be stored in data stuctures.
+            /// </summary>
+            /// <param name="outputStream">
+            /// represents a stream of bytes that have come from the remote peer
+            /// </param>
+            /// <param name="hostName">
+            /// A hostName object that will represent the remote device
+            /// </param>
+            /// <param name="port">
+            /// the port number this peer is operating on.
+            /// </param>
             public RemotePeer(IOutputStream outputStream, HostName hostName, String port)
             {
                 this.outputStream = outputStream;
@@ -289,19 +325,45 @@ namespace NetworkingLibrary
                 this.port = port;
             }
 
+            /// <summary>
+            /// This method determines if the host's name and port 
+            /// are identical to the ones provided. 
+            /// </summary>
+            /// <param name="hostName">
+            /// The host name object from the other peer
+            /// </param>
+            /// <param name="port">
+            /// The port number as a string from the other peer
+            /// </param>
+            /// <returns>
+            /// true if the hostname and port number are both the same.
+            /// for all other cases this method will return false.
+            /// </returns>
             public bool IsMatching(HostName hostName, String port)
             {
+                // check these objects against each other and return the given ports.
                 return (this.hostName == hostName && this.port == port);
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
             public IOutputStream OutputStream
             {
-                get { return outputStream; }
+                get { return OutputStream; }
             }
 
+            /// <summary>
+            /// Returns the object as a string
+            /// this will be the host name capped off with
+            /// the port number deliminatied by a : character
+            /// </summary>
+            /// <returns>
+            /// A string represention of this object
+            /// </returns>
             public override String ToString()
             {
-                return hostName + port;
+                return hostName + ":" + port;
             }
         }
 
