@@ -20,7 +20,7 @@ namespace ConsoleApp1
             bool outerLoopCheck = false;
             // this is the amount of choices the user has to pick from
             int amountOfChoices = 4;
-            // This is the selection the user made of the system
+            // This is the selection the user made of the system. its set out of bounds by default
             int choice = amountOfChoices + 1;
             do
             {
@@ -119,9 +119,9 @@ namespace ConsoleApp1
         /// </summary>
         void RunUDPDemoToms()
         {
-            UDPClient client = new UDPClient();
+            UDPClient client = new UDPClient(this);
 
-            UDPListener listener = new UDPListener(this);
+            UDPListener listener = new UDPListener(NetworkingLibaryStandard.NetworkingLibaryStandard.DefaultPortNumber+1, this);
             listener.Start();
 
             client.Start();
@@ -133,30 +133,53 @@ namespace ConsoleApp1
             listener.Stop();
         }
 
+        void RunUDPServer()
+        {
+            UDPListener listener = new UDPListener(NetworkingLibaryStandard.NetworkingLibaryStandard.DefaultPortNumber, this);
+            listener.Start();
+
+            Console.WriteLine("Press any Key to stop");
+            Console.ReadKey();
+            
+            listener.Stop();
+            Console.WriteLine("They System Has stoped");
+        }
+
+        void RunUDPClient()
+        {
+            UDPClient client = new UDPClient(this);
+
+            client.Start();
+            client.Send("Hello World");
+
+            Console.ReadKey();
+
+            client.Disconnect();
+        }
+
         /// <summary>
         /// 
         /// </summary>
         static void TcpDemo()
         {
-            //TCPListener listener = new TCPListener();
-            TCPClient client = new TCPClient("10.160.98.35");
+            TCPListener listener = new TCPListener();
+            TCPClient client = new TCPClient("127.0.0.1");
 
-            //listener.Start();
+            listener.Start();
 
             client.Start();
 
             client.Send("Hello World");
 
-            /*for(int i = 0; i < 100; i++)
+            for(int i = 0; i < 100; i++)
             {
                 client.Send(getRandomCoords());
-            }*/
-
+            }
 
             Console.ReadKey();
 
-            //client.Close();
-            //listener.Close();
+            client.Close();
+            listener.Close();
         }
 
         /// <summary>

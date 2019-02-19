@@ -79,6 +79,27 @@ namespace NetworkingLibaryStandard
         }
 
         /// <summary>
+        /// Allows the user to adjust the port number and have a message system
+        /// </summary>
+        /// <param name="portNumber">
+        /// A int repesention of the port number this protocol will use
+        /// </param>
+        /// <param name="messageSystem">
+        /// The message sytem that this system will use
+        /// </param>
+        public UDPListener(int portNumber, IDisplayMessage messageSystem)
+        {
+            // set up a end point that dosn't exclued any possible end points
+            EndPoint = new IPEndPoint(IPAddress.Any, 0);
+
+            // The object that will be used to transmit messages
+            this.messageSystem = messageSystem;
+
+            // The endpoint client that will be used for all network functionality in this class
+            this.EndpointClient = new System.Net.Sockets.UdpClient(portNumber);
+        }
+
+        /// <summary>
         /// Starts the object and creates a new thread 
         /// dedicated to listening
         /// </summary>
@@ -131,12 +152,13 @@ namespace NetworkingLibaryStandard
         /// this is a string represention of the 
         /// </param>
         /// <param name="endpoint">
-        /// The IP endpoint that needs to be used. In this class it will be the 
-        /// instace verible generally. 
+        /// Details about the other side of the coversation
         /// </param>
         private void Responce(string dataRecived, ref IPEndPoint endpoint)
         {
-            //
+            //create a client to send the data back to
+            //System.Net.Sockets.UdpClient client = new System.Net.Sockets.UdpClient(endpoint.Port, endpoint.AddressFamily);
+
             if (responder != null)
             {
                 // create a lock on this so there are no collisons or erros
@@ -147,14 +169,14 @@ namespace NetworkingLibaryStandard
                     {
                         responder.Respond(dataRecived, this.EndpointClient);
                     }
-
-                    // Code to echo back a responce
-                    byte[] data = Encoding.Unicode.GetBytes(dataRecived);
-                    this.EndpointClient.SendAsync(data, data.Length);
                 }
             }
-            
-            
+            else
+            {
+                // Code to echo back a responce
+                byte[] data = Encoding.Unicode.GetBytes(dataRecived);
+                this.EndpointClient.SendAsync(data, data.Length, endpoint);
+            }
         }
 
         /// <summary>
