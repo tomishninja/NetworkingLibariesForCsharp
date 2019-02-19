@@ -148,9 +148,8 @@ namespace NetworkingLibrary
         /// </param>
         async void MessageReceived(DatagramSocket socket, DatagramSocketMessageReceivedEventArgs eventArguments)
         {
-            // 
-            object outObj;
-            if (CoreApplication.Properties.TryGetValue("remotePeer", out outObj))
+            // send the echo message to the client if the information is easily avliable
+            if (CoreApplication.Properties.TryGetValue("remotePeer", out object outObj))
             {
                 EchoMessage((RemotePeer)outObj, eventArguments);
                 return;
