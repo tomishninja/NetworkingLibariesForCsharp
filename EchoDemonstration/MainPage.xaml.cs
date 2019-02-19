@@ -6,15 +6,26 @@ using NetworkingLibrary;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
+/// <summary>
+/// 
+/// </summary>
 namespace EchoDemonstration
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// A echo server that will just return messages to this machine using only
+    /// C# core. This is a demonstration.
     /// </summary>
     public sealed partial class MainPage : Page, IDisplayMessage
     {
+        /// <summary>
+        /// this is used as a lock for the messages recived from the 
+        /// networking libaries so there are no colisons
+        /// </summary>
         private static readonly Object obj = new Object();
 
+        /// <summary>
+        /// 
+        /// </summary>
         public MainPage()
         {
             this.InitializeComponent();

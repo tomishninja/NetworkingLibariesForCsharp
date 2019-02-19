@@ -26,7 +26,6 @@ namespace EchoDemonstrationListener
             listener.Start();
 
             Console.ReadLine();
-
         }
 
         public void DisplayMessage(string message)
