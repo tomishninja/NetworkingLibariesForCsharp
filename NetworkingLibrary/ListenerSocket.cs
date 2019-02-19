@@ -349,7 +349,7 @@ namespace NetworkingLibrary
             /// </summary>
             public IOutputStream OutputStream
             {
-                get { return OutputStream; }
+                get { return outputStream; }
             }
 
             /// <summary>

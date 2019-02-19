@@ -230,6 +230,7 @@ namespace NetworkingLibrary
                 // Interpret the incoming datagram's entire contents as a string.
                 uint stringLength = eventArguments.GetDataReader().UnconsumedBufferLength;
                 string receivedMessage = eventArguments.GetDataReader().ReadString(stringLength);
+                receivedMessage = receivedMessage.Replace("\0", "");
 
                 // transmit the data back to the main thread.
                 NotifyUserFromAsyncThread(

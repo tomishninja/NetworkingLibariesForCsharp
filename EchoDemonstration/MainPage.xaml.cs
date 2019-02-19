@@ -46,6 +46,7 @@ namespace EchoDemonstration
            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
            {
                MessageRecived.Text = message;
+               Console.WriteLine(message);
            });
         }
     }
