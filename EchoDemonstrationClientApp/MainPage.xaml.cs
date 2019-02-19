@@ -23,12 +23,15 @@ namespace EchoDemonstrationClientApp
     /// </summary>
     public sealed partial class MainPage : Page, IDisplayMessage 
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public MainPage()
         {
             this.InitializeComponent();
             this.TextBoxPortNumber.Text = NetworkingLibaryCore.DefaultServiceName;
-            this.TextBoxIPAddress.Text = NetworkingLibaryCore.LocalHostName;
-            this.MessageToSendTexBox.Text = "HelloWorld";
+            this.TextBoxIPAddress.Text = "10.160.";//NetworkingLibaryCore.LocalHostName;
+            this.MessageToSendTexBox.Text = "Hello World";
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -38,7 +41,6 @@ namespace EchoDemonstrationClientApp
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             SetUpConnection();
-
         }
 
         public async void SetUpConnection()
@@ -54,7 +56,7 @@ namespace EchoDemonstrationClientApp
             {
                 // removes all of the null specifiers from the string
                 // This is an issue when converting strings to bytes and back to strings
-                message = message.Replace("\0", "");
+                //message = message.Replace("\0", "");
 
                 // Upadate the Message Text box
                 MessageRecived.Text = message;
