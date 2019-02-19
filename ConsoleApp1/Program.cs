@@ -19,7 +19,7 @@ namespace ConsoleApp1
             // check the outer loop
             bool outerLoopCheck = false;
             // this is the amount of choices the user has to pick from
-            int amountOfChoices = 4;
+            int amountOfChoices = 6;
             // This is the selection the user made of the system. its set out of bounds by default
             int choice = amountOfChoices + 1;
             do
@@ -36,6 +36,8 @@ namespace ConsoleApp1
                     Console.WriteLine("2: UDP Demo Toms");
                     Console.WriteLine("3: Microsoft UDP Demo Downloaded");
                     Console.WriteLine("4: TCP Demo");
+                    Console.WriteLine("5: Run UDP Server");
+                    Console.WriteLine("6: Run UDP Client");
 
                     // Read the Users Input
                     string input = Console.ReadLine();
@@ -75,6 +77,12 @@ namespace ConsoleApp1
                         break;
                     case 4:
                         TcpDemo();
+                        break;
+                    case 5:
+                        RunUDPServerStatic();
+                        break;
+                    case 6:
+                        RunUDPClientStatic();
                         break;
                     default:
                         outerLoopCheck = true;
@@ -133,6 +141,12 @@ namespace ConsoleApp1
             listener.Stop();
         }
 
+        static void RunUDPServerStatic()
+        {
+            Program program = new Program();
+            program.RunUDPServer();
+        }
+
         void RunUDPServer()
         {
             UDPListener listener = new UDPListener(NetworkingLibaryStandard.NetworkingLibaryStandard.DefaultPortNumber, this);
@@ -143,6 +157,12 @@ namespace ConsoleApp1
             
             listener.Stop();
             Console.WriteLine("They System Has stoped");
+        }
+
+        static void RunUDPClientStatic()
+        {
+            Program program = new Program();
+            program.RunUDPClient();
         }
 
         void RunUDPClient()
