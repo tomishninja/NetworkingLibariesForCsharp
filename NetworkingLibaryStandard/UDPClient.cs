@@ -150,6 +150,34 @@ namespace NetworkingLibaryStandard
         }
 
         /// <summary>
+        /// A constuctor that uses the default host address but does not use the
+        /// default serial numbers. 
+        /// </summary>
+        /// <param name="hostAddress">
+        /// a stirng primitive object that represents a host address
+        /// this could either be "localhost" and ip address (either 4 or 6) 
+        /// or a URL
+        /// </param>
+        /// <param name="messageHelper">
+        /// This is a object that inherits IDisplayMessage.
+        /// </param>
+        public UDPClient(string hostAddress, IDisplayMessage messageHelper)
+        {
+            //TODO check that the host address is valid
+            this.portNumber = NetworkingLibaryStandard.DefaultPortNumber;
+            this.hostAddress = hostAddress;
+
+            // set up a way for this system to contact the outside
+            this.messageSystem = messageHelper;
+
+            // Set up a end point that dosn't exclued any possible end points
+            EndPoint = new IPEndPoint(IPAddress.Any, 0);
+
+            // set up the end point client
+            this.Client = new UdpClient(NetworkingLibaryStandard.DefaultPortNumber);
+        }
+
+        /// <summary>
         /// Starts this object allowing it to send messages
         /// to its client
         /// </summary>

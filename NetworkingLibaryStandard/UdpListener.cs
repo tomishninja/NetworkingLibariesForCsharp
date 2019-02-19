@@ -175,7 +175,9 @@ namespace NetworkingLibaryStandard
             {
                 // Code to echo back a responce
                 byte[] data = Encoding.Unicode.GetBytes(dataRecived);
+                this.EndpointClient.Close();
                 this.EndpointClient.SendAsync(data, data.Length, endpoint);
+                
             }
         }
 

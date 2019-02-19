@@ -118,6 +118,7 @@ namespace ConsoleApp1
         /// </summary>
         static void UDPDemoToms()
         {
+
             Program program = new Program();
             program.RunUDPDemoToms();
         }
@@ -161,13 +162,16 @@ namespace ConsoleApp1
 
         static void RunUDPClientStatic()
         {
+            Console.WriteLine("Please enter the IP address you wish to contact");
+            string hostAddress = Console.ReadLine();
+
             Program program = new Program();
-            program.RunUDPClient();
+            program.RunUDPClient(hostAddress);
         }
 
-        void RunUDPClient()
+        void RunUDPClient(string hostAddress)
         {
-            UDPClient client = new UDPClient(this);
+            UDPClient client = new UDPClient(hostAddress, this);
 
             client.Start();
             client.Send("Hello World");
