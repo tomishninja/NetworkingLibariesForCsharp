@@ -143,11 +143,14 @@ namespace NetworkingLibaryStandard
                 lock (ResponceLock)
                 {
                     // call the responder method to send the new information
-                    responder.Respond(dataRecived, this.EndpointClient);
+                    if (responder != null)
+                    {
+                        responder.Respond(dataRecived, this.EndpointClient);
+                    }
 
                     // Code to echo back a responce
-                    //byte[] data = Encoding.Unicode.GetBytes(dataRecived);
-                    //this.EndpointClient.SendAsync(data, data.Length);
+                    byte[] data = Encoding.Unicode.GetBytes(dataRecived);
+                    this.EndpointClient.SendAsync(data, data.Length);
                 }
             }
             

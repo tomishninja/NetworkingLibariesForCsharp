@@ -9,22 +9,92 @@ using NetworkingLibaryStandard;
 
 namespace ConsoleApp1
 {
+    /// <summary>
+    /// 
+    /// </summary>
     class Program : IDisplayMessage
     {
         static void Main(string[] args)
         {
-            JustListenUDP();
-            //UDPDemoToms();
-            //MicrosoftUDPClientDemo();
-            //TcpDemo();
+            // check the outer loop
+            bool outerLoopCheck = false;
+            // this is the amount of choices the user has to pick from
+            int amountOfChoices = 4;
+            // This is the selection the user made of the system
+            int choice = amountOfChoices + 1;
+            do
+            {
+                // make sure that this value is reset at the start of each itteration
+                outerLoopCheck = false;
+
+                // keep looping though this code until it works as expected
+                do
+                {
+                    // Prompt the user for input
+                    Console.WriteLine("Please select the Program you wish to run:");
+                    Console.WriteLine("1: Listen UDP Version");
+                    Console.WriteLine("2: UDP Demo Toms");
+                    Console.WriteLine("3: Microsoft UDP Demo Downloaded");
+                    Console.WriteLine("4: TCP Demo");
+
+                    // Read the Users Input
+                    string input = Console.ReadLine();
+                    // as if the input was valid int save the choice as a choice
+                    try
+                    {
+                        choice = Int16.Parse(input.Trim());
+                    }
+                    catch (ArgumentNullException)
+                    {
+                        Console.WriteLine("Please enter some text");
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("Please enter a valid Int");
+                    }
+                    catch (OverflowException)
+                    {
+                        Console.WriteLine("Please Don't be smart");
+                    }
+
+                } while (choice > amountOfChoices && choice < 0);
+
+                // to get out of that loop the choice must have been valid
+
+                // now we look at what the user chose and we run that program
+                switch (choice)
+                {
+                    case 1:
+                        JustListenUDP();
+                        break;
+                    case 2:
+                        UDPDemoToms();
+                        break;
+                    case 3:
+                        MicrosoftUDPClientDemo();
+                        break;
+                    case 4:
+                        TcpDemo();
+                        break;
+                    default:
+                        outerLoopCheck = true;
+                        break;
+                }
+            } while (outerLoopCheck);
         }
 
+        /// <summary>
+        /// Listens to UDP packets from all addresses
+        /// </summary>
         static void JustListenUDP()
         {
             Program program = new Program();
             program.StartListening();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         void StartListening()
         {
             UDPListener listener = new UDPListener(this);
@@ -35,12 +105,18 @@ namespace ConsoleApp1
             listener.Stop();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         static void UDPDemoToms()
         {
             Program program = new Program();
             program.RunUDPDemoToms();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         void RunUDPDemoToms()
         {
             UDPClient client = new UDPClient();
@@ -57,6 +133,9 @@ namespace ConsoleApp1
             listener.Stop();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         static void TcpDemo()
         {
             //TCPListener listener = new TCPListener();
@@ -72,7 +151,7 @@ namespace ConsoleApp1
             {
                 client.Send(getRandomCoords());
             }*/
-            
+
 
             Console.ReadKey();
 
@@ -80,12 +159,16 @@ namespace ConsoleApp1
             //listener.Close();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         static string getRandomCoords()
         {
             Random random = new Random();
             string output = "";
-            
-            for(int i = 0; i < 6; i++)
+
+            for (int i = 0; i < 6; i++)
             {
                 if (i != -1)
                 {
@@ -98,6 +181,9 @@ namespace ConsoleApp1
             return output;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         static void MicrosoftUDPClientDemo()
         {
             UdpClient udpClient = new UdpClient(11000);
