@@ -196,7 +196,7 @@ namespace NetworkingLibaryStandard
                     }
 
                     // will activiate the responder if nessarcary 
-                    Responce(returnData, ref this.EndPoint);
+                    //Responce(returnData, ref this.EndPoint);
                 }
             }
             catch (Exception ex)
