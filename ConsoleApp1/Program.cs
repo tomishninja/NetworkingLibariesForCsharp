@@ -357,6 +357,7 @@ namespace ConsoleApp1
         {
             lock (obj)
             {
+                message = message.Replace("\0", "");
                 Console.WriteLine(message);
             }
         }
