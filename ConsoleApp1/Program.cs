@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using NetworkingLibaryStandard;
 
@@ -14,12 +15,15 @@ namespace ConsoleApp1
     /// </summary>
     class Program : IDisplayMessage
     {
+
+        bool endFunction = true;
+
         static void Main(string[] args)
         {
             // check the outer loop
             bool outerLoopCheck = false;
             // this is the amount of choices the user has to pick from
-            int amountOfChoices = 6;
+            int amountOfChoices = 7;
             // This is the selection the user made of the system. its set out of bounds by default
             int choice = amountOfChoices + 1;
             do
@@ -38,6 +42,7 @@ namespace ConsoleApp1
                     Console.WriteLine("4: TCP Demo");
                     Console.WriteLine("5: Run UDP Server");
                     Console.WriteLine("6: Run UDP Client");
+                    Console.WriteLine("7: Send Random Data Via UDP Client");
 
                     // Read the Users Input
                     string input = Console.ReadLine();
@@ -83,6 +88,9 @@ namespace ConsoleApp1
                         break;
                     case 6:
                         RunUDPClientStatic();
+                        break;
+                    case 7:
+                        SendRandomNumbersStatic();
                         break;
                     default:
                         outerLoopCheck = true;
@@ -130,7 +138,7 @@ namespace ConsoleApp1
         {
             UDPClient client = new UDPClient(this);
 
-            UDPListener listener = new UDPListener(NetworkingLibaryStandard.NetworkingLibaryStandard.DefaultPortNumber+1, this);
+            UDPListener listener = new UDPListener(NetworkingLibaryStandard.NetworkingLibaryStandard.DefaultPortNumber + 1, this);
             listener.Start();
 
             client.Start();
@@ -155,7 +163,7 @@ namespace ConsoleApp1
 
             Console.WriteLine("Press any Key to stop");
             Console.ReadKey();
-            
+
             listener.Stop();
             Console.WriteLine("They System Has stoped");
         }
@@ -166,19 +174,91 @@ namespace ConsoleApp1
             string hostAddress = Console.ReadLine();
 
             Program program = new Program();
-            program.RunUDPClient(hostAddress);
+            program.RunUDPClient(hostAddress, false);
         }
 
-        void RunUDPClient(string hostAddress)
+        void RunUDPClient(string hostAddress, bool sendRandomData)
         {
             UDPClient client = new UDPClient(hostAddress, this);
 
             client.Start();
             client.Send("Hello World");
 
-            Console.ReadKey();
+            if (sendRandomData)
+            {
+                int waitTimeMilliseconds = 100;
 
+                // call a generater in a different thread to send lots of numbers
+                // at specified intervals
+                Thread randomNumbersThread = new Thread(() =>
+                    SendRandomNumbers(ref client, waitTimeMilliseconds));
+                randomNumbersThread.Start();
+
+                //if the user presses the key start trying to stop sending data
+                Console.ReadKey();
+                Console.WriteLine("Preparing to stop sending data");
+
+                // stop the loop
+                this.endFunction = false;
+
+                // wait for a while to make sure your not stoping the thread some were important
+                Thread.Sleep(waitTimeMilliseconds * 3); // 3 times the wait time should be more than enough
+            }
+
+            // Disconnect the client
             client.Disconnect();
+            Console.WriteLine("Program Stoped Sending Data");
+        }
+
+        static void SendRandomNumbersStatic()
+        {
+            Console.WriteLine("Please enter the IP address you wish to contact");
+            string hostAddress = Console.ReadLine();
+
+            Program program = new Program();
+            program.RunUDPClient(hostAddress, true);
+        }
+
+        /// <summary>
+        /// This program will send random numbers to a forign device
+        /// using UDP packets. it will act as a client
+        /// </summary>
+        /// <param name="client">
+        /// A UDPObject Acting as the client to send data from
+        /// </param>
+        /// <param name="millisecondsBetweenIterations">
+        /// The time between sending data packets
+        /// </param>
+        void SendRandomNumbers(ref UDPClient client, int millisecondsBetweenIterations)
+        {
+            // a object to generate the random data to be sent
+            Random randomGenerator = new Random();
+
+            // set veriable to true so the app runs
+            this.endFunction = true;
+            while (this.endFunction)
+            {
+                // this will be the data to send to the client
+                string outputString = "";
+
+                // this loop will build the string to send to the other client
+                for (int i = 0; i < 6; i++)
+                {
+                    outputString += randomGenerator.Next(256);
+
+                    // add a deliminator to the items
+                    if (i < 5)
+                    {
+                        outputString += ",";
+                    }
+                }
+
+
+                Thread.Sleep(millisecondsBetweenIterations);
+
+                //
+                client.Send(outputString);
+            }
         }
 
         /// <summary>
@@ -195,7 +275,7 @@ namespace ConsoleApp1
 
             client.Send("Hello World");
 
-            for(int i = 0; i < 100; i++)
+            for (int i = 0; i < 100; i++)
             {
                 client.Send(getRandomCoords());
             }
