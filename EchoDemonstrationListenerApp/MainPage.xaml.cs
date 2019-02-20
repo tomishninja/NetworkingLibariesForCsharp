@@ -26,6 +26,7 @@ namespace EchoDemonstrationListenerApp
         public MainPage()
         {
             this.InitializeComponent();
+
             ListenerSocket listener = NetworkingLibaryCore.GetListener(this);
             listener.Start();
         }
@@ -34,7 +35,15 @@ namespace EchoDemonstrationListenerApp
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                this.StatusListBox.Items.Add(new ListBoxItem().Content = message);
+                this.StatusListBox.Items.Insert(0, new ListBoxItem().Content = message);
+
+                if (this.StatusListBox.Items.Count > 1000)
+                {
+                    for(int i = 0; i < 100; i++)
+                    {
+                        StatusListBox.Items.RemoveAt(900);
+                    }
+                }
             });
         }
     }
