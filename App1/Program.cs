@@ -39,7 +39,7 @@ namespace App1
 
         public async void SetUpConnection()
         {
-            Connection connection = NetworkingLibaryCore.GetConnection(NetworkingLibaryCore.DefaultServiceName, "10.160.98.35",this);
+            Connection connection = NetworkingLibaryCore.GetConnection(NetworkingLibaryCore.DefaultServiceName, "10.160.37.168",this);
             displayMessageStatic("Connection Running");
             await connection.StartAsync();
 

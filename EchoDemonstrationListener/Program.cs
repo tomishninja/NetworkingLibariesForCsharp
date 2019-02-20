@@ -16,6 +16,7 @@ namespace EchoDemonstrationListener
 
         static void Main(string[] args)
         {
+            Console.WriteLine("Running Listener Command Console");
             Program program = new Program();
             program.run();
         }
