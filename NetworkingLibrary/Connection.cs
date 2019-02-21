@@ -210,7 +210,7 @@ namespace NetworkingLibrary
         {
             if (this.MessageHost != null)
             {
-                this.MessageHost.DisplayMessage(strMessage);
+                this.MessageHost.DisplayMessage(MessageHelper.MessageType.Data, strMessage);
             }
         }
 

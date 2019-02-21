@@ -19,6 +19,6 @@ namespace NetworkingLibrary
         /// <param name="message">
         /// The message text from the network libary
         /// </param>
-        void DisplayMessage(string message);
+        void DisplayMessage(MessageHelper.MessageType typeOfMessage, string message);
     }
 }

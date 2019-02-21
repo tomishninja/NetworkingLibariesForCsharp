@@ -132,7 +132,7 @@ namespace NetworkingLibrary
             }
             catch (Exception exception)
             {
-                NotifyUserFromAsyncThread("Connect failed with error: " + exception.Message);
+                NotifyUserFromAsyncThread(MessageHelper.MessageType.Exception, exception.Message);
             }
         }
 
@@ -193,7 +193,7 @@ namespace NetworkingLibrary
                 }
 
                 // if there is an exception send it to the view if possible
-                NotifyUserFromAsyncThread("Connect failed with error: " + exception.Message);
+                NotifyUserFromAsyncThread(MessageHelper.MessageType.Exception, exception.Message);
             }
         }
 
@@ -229,13 +229,13 @@ namespace NetworkingLibrary
                 }
 
                 // send this expection to the view
-                NotifyUserFromAsyncThread("Send failed with Exception: " + exception.Message);
+                NotifyUserFromAsyncThread(MessageHelper.MessageType.Exception, exception.Message);
             }
             
             // display message
             try
             {
-                NotifyUserFromAsyncThread(receivedMessage);
+                NotifyUserFromAsyncThread(MessageHelper.MessageType.Data, receivedMessage);
             }
             catch (Exception exception)
             {
@@ -245,13 +245,13 @@ namespace NetworkingLibrary
                 {
                     // This error would indicate that a previous send operation resulted in an 
                     // ICMP "Port Unreachable" message.
-                    NotifyUserFromAsyncThread(
+                    NotifyUserFromAsyncThread( MessageHelper.MessageType.Error,
                         "Peer does not listen on the specific port. Please make sure that you run step 1 first " +
                         "or you have a server properly working on a remote server.");
                 }
                 else if (socketError != SocketErrorStatus.Unknown)
                 {
-                    NotifyUserFromAsyncThread(
+                    NotifyUserFromAsyncThread(MessageHelper.MessageType.Error,
                         "Error happened when receiving a datagram: " + socketError.ToString());
                 }
                 else
@@ -266,11 +266,11 @@ namespace NetworkingLibrary
         /// </summary>
         /// <param name="strMessage">The message</param>
         /// <param name="type">The type of notification</param>
-        private void NotifyUserFromAsyncThread(string strMessage)
+        private void NotifyUserFromAsyncThread(MessageHelper.MessageType type, string strMessage)
         {
             if (this.MessageHost != null)
             {
-                this.MessageHost.DisplayMessage(strMessage);
+                this.MessageHost.DisplayMessage(type, strMessage);
             }
         }
 

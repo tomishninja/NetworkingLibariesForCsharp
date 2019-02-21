@@ -37,7 +37,7 @@ namespace EchoDemonstrationListenerApp
             {
                 this.StatusListBox.Items.Insert(0, new ListBoxItem().Content = message);
 
-                if (this.StatusListBox.Items.Count > 1000)
+                if (StatusListBox.Items.Count > 1000)
                 {
                     for(int i = 0; i < 100; i++)
                     {
