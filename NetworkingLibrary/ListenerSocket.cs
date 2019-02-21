@@ -235,7 +235,7 @@ namespace NetworkingLibrary
             // display message
             try
             {
-                NotifyUserFromAsyncThread(  "Received data: \"" + receivedMessage + "\"");
+                NotifyUserFromAsyncThread(receivedMessage);
             }
             catch (Exception exception)
             {
