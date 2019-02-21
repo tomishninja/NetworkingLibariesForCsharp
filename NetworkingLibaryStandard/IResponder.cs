@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace NetworkingLibaryStandard
@@ -21,6 +22,9 @@ namespace NetworkingLibaryStandard
         /// <param name="client">
         /// This is the client that originally sent the message
         /// </param>
-        void Respond(string messageRecived, System.Net.Sockets.UdpClient client);
+        /// <param name="endpoint">
+        /// a object holding the port number and host name of the other device
+        /// </param>
+        void Respond(string messageRecived, System.Net.Sockets.UdpClient client, ref IPEndPoint endpoint);
     }
 }

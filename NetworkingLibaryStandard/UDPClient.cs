@@ -259,7 +259,7 @@ namespace NetworkingLibaryStandard
                     // call the responder method to send the new information
                     if (responder != null)
                     {
-                        responder.Respond(dataRecived, this.Client);
+                        responder.Respond(dataRecived, this.Client, ref endpoint);
                     }
                 }
             }

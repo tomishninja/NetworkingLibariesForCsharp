@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NetworkingLibrary
+﻿namespace NetworkingLibrary
 {
     /// <summary>
     /// This interface allows classes in the Networking libary to

@@ -17,7 +17,7 @@ namespace NetworkingLibaryStandard
         /// so it isn't a very strict endpoint
         /// </summary>
         IPEndPoint EndPoint = null;
-        
+
         /// <summary>
         /// This object represents the client at the end of the network
         /// acting as a listener
@@ -54,7 +54,7 @@ namespace NetworkingLibaryStandard
         {
             // Set up a end point that dosn't exclued any possible end points
             EndPoint = new IPEndPoint(IPAddress.Any, 0);
-            
+
             // set up the end point client
             this.EndpointClient = new System.Net.Sockets.UdpClient(NetworkingLibaryStandard.DefaultPortNumber);
         }
@@ -73,7 +73,7 @@ namespace NetworkingLibaryStandard
 
             // The object that will be used to transmit messages
             this.messageSystem = messageSystem;
-            
+
             // The endpoint client that will be used for all network functionality in this class
             this.EndpointClient = new System.Net.Sockets.UdpClient(NetworkingLibaryStandard.DefaultPortNumber);
         }
@@ -159,23 +159,20 @@ namespace NetworkingLibaryStandard
             //create a client to send the data back to
             //System.Net.Sockets.UdpClient client = new System.Net.Sockets.UdpClient(endpoint.Port, endpoint.AddressFamily);
 
-            if (responder != null)
+            // create a lock on this so there are no collisons or erros
+            lock (ResponceLock)
             {
-                // create a lock on this so there are no collisons or erros
-                lock (ResponceLock)
+                // call the responder method to send the new information
+                if (responder != null)
                 {
-                    // call the responder method to send the new information
-                    if (responder != null)
-                    {
-                        responder.Respond(dataRecived, this.EndpointClient);
-                    }
+                    responder.Respond(dataRecived, this.EndpointClient, ref endpoint);
                 }
-            }
-            else
-            {
-                // Code to echo back a responce
-                byte[] data = Encoding.Unicode.GetBytes(dataRecived);
-                this.EndpointClient.SendAsync(data, data.Length, endpoint);
+                else
+                {
+                    // Code to echo back a responce
+                    byte[] data = Encoding.Unicode.GetBytes(dataRecived);
+                    this.EndpointClient.SendAsync(data, data.Length, endpoint);
+                }
             }
         }
 
@@ -186,11 +183,11 @@ namespace NetworkingLibaryStandard
         {
             this.IsConnected = false;
 
-            if(EndpointClient != null)
+            if (EndpointClient != null)
             {
                 this.EndpointClient.Close();
             }
-            
+
         }
     }
 }
