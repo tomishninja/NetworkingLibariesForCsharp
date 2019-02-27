@@ -31,7 +31,7 @@ namespace EchoDemonstrationListenerApp
             listener.Start();
         }
 
-        public async void DisplayMessage(string message)
+        public async void DisplayMessage(MessageHelper.MessageType type, string message)
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {

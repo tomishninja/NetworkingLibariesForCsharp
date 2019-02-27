@@ -7,13 +7,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NetworkingLibaryStandard;
+using LSLFramework;
 
 namespace ConsoleApp1
 {
     /// <summary>
     /// 
     /// </summary>
-    class Program : IDisplayMessage
+    class Program : NetworkingLibaryStandard.IDisplayMessage, LSLFramework.IDisplayMessage
     {
 
         bool endFunction = true;
@@ -23,7 +24,7 @@ namespace ConsoleApp1
             // check the outer loop
             bool outerLoopCheck = false;
             // this is the amount of choices the user has to pick from
-            int amountOfChoices = 7;
+            int amountOfChoices = 8;
             // This is the selection the user made of the system. its set out of bounds by default
             int choice = amountOfChoices + 1;
             do
@@ -43,6 +44,7 @@ namespace ConsoleApp1
                     Console.WriteLine("5: Run UDP Server");
                     Console.WriteLine("6: Run UDP Client");
                     Console.WriteLine("7: Send Random Data Via UDP Client");
+                    Console.WriteLine("8: LSL Recive Floats Test");
 
                     // Read the Users Input
                     string input = Console.ReadLine();
@@ -92,11 +94,28 @@ namespace ConsoleApp1
                     case 7:
                         SendRandomNumbersStatic();
                         break;
+                    case 8:
+                        StartLSLInletDemo();
+                        break;
                     default:
                         outerLoopCheck = true;
                         break;
                 }
             } while (outerLoopCheck);
+        }
+
+        public static void StartLSLInletDemo()
+        {
+            Console.WriteLine("Starting LSL Demo");
+
+            Program program = new Program();
+
+            LSLInletFloats lslinlet = new LSLInletFloats("type", "RandCoord", 8, program);
+            lslinlet.Start();
+
+            Console.ReadKey();
+
+            lslinlet.Stop();
         }
 
         /// <summary>
@@ -352,8 +371,9 @@ namespace ConsoleApp1
             }
         }
 
+        // Display a message from the network standard libary
         public static object obj = new object();
-        public void DisplayMessage(MessageHelper.MessageType type, string message)
+        public void DisplayMessage(NetworkingLibaryStandard.MessageHelper.MessageType type, string message)
         {
             lock (obj)
             {
@@ -361,5 +381,15 @@ namespace ConsoleApp1
                 Console.WriteLine(message);
             }
         }
+
+        // Display a message from the LSL framework
+        public void DisplayMessage(string message)
+        {
+            lock (obj)
+            {
+                Console.WriteLine(message);
+            }
+        }
+
     }
 }

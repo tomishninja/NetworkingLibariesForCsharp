@@ -29,7 +29,7 @@ namespace EchoDemonstrationListener
             Console.ReadLine();
         }
 
-        public void DisplayMessage(string message)
+        public void DisplayMessage(MessageHelper.MessageType type, string message)
         {
             lock (obj)
             {
