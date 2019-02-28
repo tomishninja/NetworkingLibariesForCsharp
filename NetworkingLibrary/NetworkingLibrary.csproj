@@ -122,11 +122,14 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="Connection.cs" />
+    <Compile Include="EchoResponder.cs" />
     <Compile Include="iDisplayMessage.cs" />
     <Compile Include="IResponder.cs" />
     <Compile Include="ListenerSocket.cs" />
     <Compile Include="MessageHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TCPClient.cs" />
+    <Compile Include="TCPServer.cs" />
     <EmbeddedResource Include="Properties\NetworkingLibrary.rd.xml" />
   </ItemGroup>
   <ItemGroup>

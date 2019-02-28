@@ -16,6 +16,6 @@ namespace NetworkingLibrary
         /// A value decribing different types of messages sent from this libary
         /// that could be used for general purpose.
         /// </summary>
-        public enum MessageType { Data, Exception, Error };
+        public enum MessageType { Data, Status, Exception, Error };
     }
 }

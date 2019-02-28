@@ -5,7 +5,7 @@
     /// send various interactions. More still needs to be done with this class
     /// before its intergartion
     /// </summary>
-    interface IResponder
+    public interface IResponder
     {
         /// <summary>
         /// This method will be called to determine various 
@@ -14,6 +14,9 @@
         /// <param name="MessageRecived">
         /// The data recived from the message recived.
         /// </param>
-        void Respond(string MessageRecived);
+        /// <param name="args">
+        /// the arguments from the event that called this responder
+        /// </param>
+        void Respond(string MessageRecived, Windows.Networking.Sockets.StreamSocketListenerConnectionReceivedEventArgs args);
     }
 }

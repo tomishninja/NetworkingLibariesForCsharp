@@ -127,6 +127,36 @@ namespace NetworkingLibaryStandard
             this.Client = new System.Net.Sockets.UdpClient(portNumber);
         }
 
+
+
+        /// <summary>
+        /// A constuctor that allows the user to change the port number from default
+        /// but still uses local host for the ip address
+        /// </summary>
+        /// <param name="portNumber">
+        /// A integer that is above zero and ideally less than 655535
+        /// </param>
+        public UDPClient(int portNumber, string hostAddress)
+        {
+            // if the argument is negivtive then send back an exception
+            if (portNumber < 0)
+            {
+                throw new ArgumentException(
+                    "invalid port number given. Value must be a postive number"
+                    );
+            }
+
+            // set the values
+            this.portNumber = portNumber;
+            this.hostAddress = hostAddress;
+
+            // Set up a end point that dosn't exclued any possible end points
+            EndPoint = new IPEndPoint(IPAddress.Any, 0);
+
+            // set up the end point client
+            this.Client = new System.Net.Sockets.UdpClient(portNumber);
+        }
+
         /// <summary>
         /// A constuctor that uses the default host address but does not use the
         /// default serial numbers. 
