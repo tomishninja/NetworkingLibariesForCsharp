@@ -31,7 +31,7 @@ namespace EchoDemonstrationListenerApp
             listener.Start();
         }
 
-        public async void DisplayMessage(string message)
+        public async void DisplayMessage(MessageHelper.MessageType typeOfMessage, string message)
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
@@ -39,7 +39,7 @@ namespace EchoDemonstrationListenerApp
 
                 if (StatusListBox.Items.Count > 1000)
                 {
-                    for(int i = 0; i < 100; i++)
+                    for (int i = 0; i < 100; i++)
                     {
                         StatusListBox.Items.RemoveAt(900);
                     }
