@@ -12,11 +12,12 @@ namespace NetworkBridgeConsoleApp
 
         public const string DefaultModifier = "default";
 
+        internal DataManagement.IDataStore<String> DataManager = null;
 
-        public static object obj = new object();
-        public void DisplayMessage(string message)
+        public static object DisplayMessageLock = new object();
+        public virtual void DisplayMessage(string message)
         {
-            lock (obj)
+            lock (DisplayMessageLock)
             {
                 Console.WriteLine(message);
             }

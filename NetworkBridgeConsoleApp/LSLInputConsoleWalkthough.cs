@@ -4,6 +4,11 @@ namespace NetworkBridgeConsoleApp
 {
     public class LSLInputConsoleWalkthough : AbstractLSLConsoleWalkThough
     {
+        bool DisplayData = false;
+
+        bool StoreData = false;
+
+
         public LSLInputConsoleWalkthough()
         {
         }
@@ -13,6 +18,7 @@ namespace NetworkBridgeConsoleApp
             string prop = null;
             string value = null;
             int arrayLength = -1;
+            LSLFramework.LSLInletFloats inlet;
 
             while (prop == null)
             {
@@ -89,8 +95,6 @@ namespace NetworkBridgeConsoleApp
                 }
             } while (arrayLength < 0);
 
-            LSLFramework.LSLInletFloats inlet;
-
             char cinput_TransferData;
             // give the system the option to choose how to were the data goes
             do
@@ -107,30 +111,11 @@ namespace NetworkBridgeConsoleApp
                 cinput_DisplayData = Console.ReadLine().Trim().ToLower().ToCharArray()[0];
             } while (cinput_DisplayData != 'y' && cinput_DisplayData != 'n');
 
-            // TODO set up a briding application here
-            if (cinput_TransferData == 'y' && cinput_DisplayData == 'y')
-            {
-                // TODO: Transfer data and display it 
-            }
-            else if (cinput_TransferData == 'y')
-            {
-                // TODO: Transfer data and do not display it 
-            }
-            if (cinput_DisplayData == 'y')
-            {
-                inlet = new LSLFramework.LSLInletFloats(prop, value, arrayLength, this);
-            }
-            else
-            {
-                // this option the user chose no to both options
-                inlet = new LSLFramework.LSLInletFloats(prop, value, arrayLength);
-            }
+            inlet = BuildInlet(prop, value, arrayLength, cinput_TransferData == 'y', cinput_DisplayData == 'y');
 
             Console.WriteLine("Value is now set to: \"" + value + "\"");
 
             Console.WriteLine("Now starting LSL inlet");
-
-            LSLFramework.LSLInletFloats inlet = new LSLFramework.LSLInletFloats(prop, value, arrayLength, this);
 
             // run LSL
             inlet.Start();
@@ -142,6 +127,53 @@ namespace NetworkBridgeConsoleApp
             inlet.Stop();
 
             return true;
+        }
+
+        public LSLFramework.LSLInletFloats BuildInlet(string prop, string value, int arrayLength, bool display, bool store)
+        {
+            LSLFramework.LSLInletFloats inlet;
+
+            this.DisplayData = display;
+            this.StoreData = store;
+
+            // TODO set up a briding application here
+            if (store && display)
+            {
+                // TODO: Transfer data and display it 
+                DataManager = new DataManagement.SyncronisedQueueDataStore<string>(null);
+                inlet = new LSLFramework.LSLInletFloats(prop, value, arrayLength, this);
+            }
+            else if (store)
+            {
+                DataManager = new DataManagement.SyncronisedQueueDataStore<string>(null);
+                inlet = new LSLFramework.LSLInletFloats(prop, value, arrayLength, this);
+            }
+            if (display)
+            {
+                inlet = new LSLFramework.LSLInletFloats(prop, value, arrayLength, this);
+            }
+            else
+            {
+                // this option the user chose no to both options
+                inlet = new LSLFramework.LSLInletFloats(prop, value, arrayLength);
+            }
+
+            return inlet;
+        }
+
+        public override void DisplayMessage(string message)
+        {
+            lock (DisplayMessageLock)
+            {
+                if (StoreData && message != null)
+                {
+                    this.DataManager.Add(message);
+                }
+                if (DisplayData)
+                {
+                    Console.WriteLine(message);
+                }
+            }
         }
     }
 }
