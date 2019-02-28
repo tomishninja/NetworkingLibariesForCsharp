@@ -58,6 +58,11 @@ namespace NetworkingLibaryStandard
         /// </summary>
         private readonly string hostAddress = null;
 
+        public void Close()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// The main udp client object. this object provides much of the interface 
         /// between these services.
