@@ -4,11 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetworkBridgeConsoleApp
+namespace NetworkBridgeConsoleApp.NetworkWrappers
 {
     class LSLOutputConsoleWalkthough : AbstractLSLConsoleWalkThough
     {
-        public override bool Start()
+        public override void Start()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Stop()
         {
             throw new NotImplementedException();
         }

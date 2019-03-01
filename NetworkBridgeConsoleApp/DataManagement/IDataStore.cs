@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NetworkBridgeConsoleApp.DataManagement
 {
-    interface IDataStore<T>
+    public interface IDataStore<T>
     {
         bool TryGetNext(out T output);
 

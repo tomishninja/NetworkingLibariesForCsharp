@@ -3,16 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using LSLFramework;
 
-namespace NetworkBridgeConsoleApp
+namespace NetworkBridgeConsoleApp.NetworkWrappers
 {
-    public abstract class AbstractLSLConsoleWalkThough : IDisplayMessage
+    public abstract class AbstractLSLConsoleWalkThough : IDisplayMessage, INetworkObject
     {
         public const string UseDefault = "enter nothing to recive default value";
         public const string SeeDefault = "enter default to view current default value";
 
         public const string DefaultModifier = "default";
 
-        internal DataManagement.IDataStore<String> DataManager = null;
+        public DataManagement.IDataStore<String> DataManager
+        {
+            get;
+            internal set;
+        }
 
         public static object DisplayMessageLock = new object();
         public virtual void DisplayMessage(string message)
@@ -23,6 +27,7 @@ namespace NetworkBridgeConsoleApp
             }
         }
 
-        public abstract bool Start();
+        public abstract void Start();
+        public abstract void Stop();
     }
 }

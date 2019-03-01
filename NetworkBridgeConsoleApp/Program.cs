@@ -1,4 +1,5 @@
-﻿using NetworkingLibaryStandard;
+﻿using NetworkBridgeConsoleApp.NetworkWrappers;
+using NetworkingLibaryStandard;
 using System;
 
 namespace NetworkBridgeConsoleApp
@@ -20,125 +21,39 @@ namespace NetworkBridgeConsoleApp
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            Console.WriteLine(WriteWelcomeMessage());
-            string userInput = "";
-
-            while (IsQuit(userInput))
-            {
-                Console.WriteLine("please enter a command:");
-                userInput = Console.ReadLine().ToLower().Trim();
-
-                switch (userInput)
-                {
-                    case "-help":
-                        Console.WriteLine(WriteHelpMessage());
-                        break;
-                    case "-frameworks":
-                        Console.WriteLine(WriteFrameWorksMessage());
-                        break;
-                    case "-start":
-                        userInput = RunBridgingApplication();
-                        break;
-                    default:
-                        if (userInput.Substring(0, 10).Equals("-start now"))
-                        {
-                            // Run faster Program
-                            userInput = StartAll(userInput);
-                        }
-                        else
-                        {
-                            Console.WriteLine(WriteNoCommandFoundString(userInput));
-                        }
-                        break;
-                }
-            }
-        }
-
-        static string RunBridgingApplication()
-        {
-            // string value to hold the users inputs in
             string userInput = null;
+            userInput = args[0].ToLower().Trim();
 
-            // bool value to tell the system when to repete a loop
-            bool invalidFlag = false;
-
-            // get the users input from the feild
-            do
+            switch (userInput)
             {
-                Console.WriteLine("Please enter the HostName or valid framework for the source of the packets you wish to use");
-                userInput = Console.ReadLine().ToLower().Trim();
-
-                if (IsFrameWork(userInput))
-                {
-                    char charinput = 'a';
-
-                    // determine what framework and what should be done about it
-                    if (userInput.Equals(Frameworks[0].ToLower()))
+                case "-help":
+                    Console.WriteLine(WriteHelpMessage());
+                    break;
+                case "-frameworks":
+                    Console.WriteLine(WriteFrameWorksMessage());
+                    break;
+                default:
+                    if (userInput.Equals("-start"))
                     {
-                        // this will be the LSL layer.
-                        do
-                        {
-                            Console.WriteLine("Do you want to run a inlet(i) or a outlet(o)");
-                            charinput = Console.ReadLine().Trim().ToCharArray()[0];
-
-                            if (charinput == 'i')
-                            {
-                                new LSLInputConsoleWalkthough().Start();
-                            }
-                            else if (charinput == 'o')
-                            {
-
-                            }
-                            else
-                            {
-                                Console.WriteLine("\'" + charinput + "\' is not a valid input");
-                            }
-                        } while (charinput != 'i' && charinput != 'o');
-
+                        // Run faster Program
+                        StartAll(args);
                     }
                     else
                     {
-                        // this should never be reached if it is you need to work out what to do.
+                        Console.WriteLine(WriteNoCommandFoundString(userInput));
                     }
-                }
-                else if (System.Net.IPAddress.TryParse(userInput, out System.Net.IPAddress ipaddress))
-                {
-                    // the the user entered a valid ip address now continue to ask for a port number
-                    do
-                    {
-                        // 
-                        Console.WriteLine("Please enter the Port Number to listen to");
-                        userInput = Console.ReadLine().ToLower().Trim();
+                    break;
+            }
 
-                        if (int.TryParse(userInput, out int portNumber) && portNumber > -1)
-                        {
-                            // Start working with the connection
-                            //TODO: implement the networking 
-                        }
-                        else if (IsQuit(userInput))
-                        {
-                            // get out of this
-                            return userInput;
-                        }
-                        else
-                        {
-                            // this entry is in valid
-                            invalidFlag = true;
-                            Console.WriteLine("\"" + userInput + "\" is not a valid portnumber");
-                        }
-                    } while (invalidFlag);
-                    // invalid flag must equal false to leave
-                }
-                else if (IsQuit(userInput))
-                {
-                    return userInput;
-                }
-            } while (invalidFlag);
-
-            return null;
+            Console.ReadKey();
         }
 
-        static bool IsQuit(string input)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>false if it the quit symbol has been used or else it will return false</returns>
+        static bool IsNotQuit(string input)
         {
             return input == null || !(input.Equals("-q") || input.Equals("-quit"));
         }
@@ -183,34 +98,14 @@ namespace NetworkBridgeConsoleApp
             return helpMessage;
         }
 
-        /// <summary>
-        /// Writes a welcome message for the app. 
-        /// This will be the first thing users see when they load this program
-        /// </summary>
-        /// <returns>
-        /// retuns a string version of the welcome message
-        /// </returns>
-        static string WriteWelcomeMessage()
-        {
-            string welcomeMessage = "";
-
-            welcomeMessage += "Welcome to the network bridging app.\n";
-            welcomeMessage += "write \"-help\" to recive help. and a list of commands";
-            welcomeMessage += "write \"-frameworks\" to see a list of avalible frameworks this program is functional with";
-            welcomeMessage += "and descriptions about what they are for\n";
-            welcomeMessage += "write \"-start\" to begin the briging process";
-            welcomeMessage += "write \"-q\" or \"-quit to exit the application";
-
-            return welcomeMessage;
-        }
-
-        static string StartAll(string userInput)
+        static void StartAll(string[] args)
         {
             // veriables
-            LSLFramework.LSLInletFloats inlet = null;
-            NetworkingLibaryStandard.UDPClient outlet = null;
+            INetworkObject inlet = null;
+            INetworkObject outlet = null;
+            DataManagement.IDataStore<string> dataStore = null;
 
-            string[] options = userInput.Split();
+            string[] options = args;
 
             int cindex = 2;
 
@@ -223,23 +118,25 @@ namespace NetworkBridgeConsoleApp
                         // run LSL
                         try
                         {
-                            LSLInputConsoleWalkthough lslInputHelper = new LSLInputConsoleWalkthough();
-
                             // get the new input
-                            inlet = lslInputHelper.BuildInlet(
+                            inlet = new LSLInputConsoleWalkthough(
                                         options[++cindex], options[++cindex], int.Parse(options[++cindex]),
                                         options[++cindex].Equals("-D"), true);
 
                             if (inlet == null)
                             {
-                                return userInput;
+                                return;
+                            }
+                            else
+                            {
+                                dataStore = ((LSLInputConsoleWalkthough)inlet).DataManager;
                             }
                             break;
                         }
                         catch (Exception e)
                         {
                             Console.WriteLine(e.Message);
-                            return userInput;
+                            return;
                         }
                     case "udp":
                         //TODO run UDP listener
@@ -248,11 +145,11 @@ namespace NetworkBridgeConsoleApp
             }
 
             // the the current C index equals the d move forward one to get to the next marker
-            if (options[cindex].Equals("-d"))
+            if (options[cindex].ToLower().Equals("-d"))
                 cindex++;
 
             // work out the outlet details
-            switch (options[cindex])
+            switch (options[cindex].ToLower())
             {
                 case "lsl":
                 //TODO run LSL
@@ -261,12 +158,12 @@ namespace NetworkBridgeConsoleApp
                     // Run UDP client
                     try
                     {
-                        outlet = new UDPClient(int.Parse(options[++cindex]), options[++cindex]);
+                        outlet = new UDPOutlet(int.Parse(options[++cindex]), options[++cindex], dataStore);
                     }
                     catch (Exception e)
                     {
                         Console.WriteLine(e.Message);
-                        return userInput;
+                        return;
                     }
 
                     break;
@@ -278,15 +175,15 @@ namespace NetworkBridgeConsoleApp
 
                 outlet.Start();
 
-
                 Console.ReadKey();
 
                 inlet.Stop();
 
-                outlet.Disconnect();
+                outlet.Stop();
+                outlet.Stop();
             }
 
-            return userInput;
+            return;
         }
 
         public static object DisplayMessageLock = new object();

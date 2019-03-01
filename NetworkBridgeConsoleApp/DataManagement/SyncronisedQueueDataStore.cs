@@ -53,6 +53,9 @@ namespace NetworkBridgeConsoleApp.DataManagement
                     }
                     catch(Exception ex)
                     {
+                        //
+                        Console.WriteLine(ex.Message);
+
                         // if there are any errors 
                         // return fasle and move on
                         output = InvalidMarker;

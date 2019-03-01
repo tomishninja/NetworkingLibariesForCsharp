@@ -43,11 +43,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractLSLConsoleWalkThough.cs" />
+    <Compile Include="NetworkWrappers\AbstractLSLConsoleWalkThough.cs" />
     <Compile Include="DataManagement\IDataStore.cs" />
     <Compile Include="DataManagement\SyncronisedQueueDataStore.cs" />
-    <Compile Include="LSLInputConsoleWalkthough.cs" />
-    <Compile Include="LSLOutputConsoleWalkthough.cs" />
+    <Compile Include="NetworkWrappers\AbstractNetworkOutlet.cs" />
+    <Compile Include="NetworkWrappers\LSLInputConsoleWalkthough.cs" />
+    <Compile Include="NetworkWrappers\LSLOutputConsoleWalkthough.cs" />
+    <Compile Include="NetworkWrappers\INetworkObject.cs" />
+    <Compile Include="NetworkWrappers\UDPOutlet.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
