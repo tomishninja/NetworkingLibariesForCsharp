@@ -44,6 +44,8 @@ namespace NetworkBridgeConsoleApp
                     }
                     break;
             }
+
+            Console.ReadKey();
         }
 
         /// <summary>

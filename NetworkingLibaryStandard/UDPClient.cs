@@ -60,7 +60,7 @@ namespace NetworkingLibaryStandard
 
         public void Close()
         {
-            throw new NotImplementedException();
+            this.Disconnect();
         }
 
         /// <summary>
