@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NetworkingLibaryStandard
+﻿namespace NetworkingLibaryStandard
 {
     public class NetworkingLibaryStandard
     {

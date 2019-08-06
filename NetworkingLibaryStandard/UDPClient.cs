@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -13,7 +12,7 @@ namespace NetworkingLibaryStandard
     /// </summary>
     public class UDPClient
     {
-        // <summary>
+        /// <summary>
         /// A object that represents a networks end point
         /// This object basicly just stops packets from passing by
         /// This object usally has this object checking all UDP packets it gets
@@ -101,7 +100,7 @@ namespace NetworkingLibaryStandard
             EndPoint = new IPEndPoint(IPAddress.Any, 0);
 
             // set up the end point client
-            this.Client = new System.Net.Sockets.UdpClient(NetworkingLibaryStandard.DefaultPortNumber);
+            this.Client = new System.Net.Sockets.UdpClient(portNumber);
         }
 
         /// <summary>
