@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,27 +9,32 @@ namespace UnityTestOutputRig
 {
     class UnityStreamingDataExample
     {
-        public const string Deliminator = ",";
-
-        public string X { get; set; }
-        public string Y { get; set; }
-        public string Z { get; set; }
+        public const string Deliminator = "_";
+        
         public bool HasChanged { get; set; }
 
-        
+        public float posX { get; set; }
+        public float posY { get; set; }
+        public float posZ { get; set; }
+
         public UnityStreamingDataExample()
         {
-            X = "0";
-            Y = "0";
-            Z = "0";
+            posX = 0;
+            posY = 0;
+            posZ = 0;
             HasChanged = false;
         }
 
         public override string ToString()
         {
-            string value =  HasChanged + Deliminator + X + Deliminator + Y + Deliminator + Z;
+            string value =  HasChanged + Deliminator + posX + Deliminator + posY + Deliminator + posZ;
             HasChanged = false;
             return value;
+        }
+
+        public string ToJSON()
+        {
+            return JsonConvert.SerializeObject(this);
         }
     }
 }

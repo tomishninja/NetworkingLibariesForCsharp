@@ -2,6 +2,7 @@
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace NetworkingLibaryStandard
 {
@@ -48,15 +49,24 @@ namespace NetworkingLibaryStandard
         private static object ResponceLock = new object();
 
         /// <summary>
+        /// The Amount of time before the listener connacts the the client for an
+        /// update after it has already recived one. Set to zero by default.
+        /// </summary>
+        private readonly int MilliscondsToWaitBetweenCalls;
+
+        /// <summary>
         /// The default constuctor for hte UDP listener
         /// </summary>
-        public UDPListener()
+        public UDPListener(int milliscondsToWaitBetweenCalls = 0)
         {
             // Set up a end point that dosn't exclued any possible end points
             EndPoint = new IPEndPoint(IPAddress.Any, 0);
 
             // set up the end point client
             this.EndpointClient = new System.Net.Sockets.UdpClient(NetworkingLibaryStandard.DefaultPortNumber);
+
+            // set the amount of milliseconds to wait between reading the next version
+            MilliscondsToWaitBetweenCalls = milliscondsToWaitBetweenCalls;
         }
 
         /// <summary>
@@ -66,7 +76,7 @@ namespace NetworkingLibaryStandard
         /// This will be a object that has implemented the IDisplayMessage interface. 
         /// This object will beable to recive messages created by this sytem at run time.
         /// </param>
-        public UDPListener(IDisplayMessage messageSystem)
+        public UDPListener(IDisplayMessage messageSystem, int milliscondsToWaitBetweenCalls = 0)
         {
             // set up a end point that dosn't exclued any possible end points
             EndPoint = new IPEndPoint(IPAddress.Any, 0);
@@ -76,6 +86,9 @@ namespace NetworkingLibaryStandard
 
             // The endpoint client that will be used for all network functionality in this class
             this.EndpointClient = new System.Net.Sockets.UdpClient(NetworkingLibaryStandard.DefaultPortNumber);
+
+            // set the amount of milliseconds to wait between reading the next version
+            MilliscondsToWaitBetweenCalls = milliscondsToWaitBetweenCalls;
         }
 
         /// <summary>
@@ -87,7 +100,7 @@ namespace NetworkingLibaryStandard
         /// <param name="messageSystem">
         /// The message sytem that this system will use
         /// </param>
-        public UDPListener(int portNumber, IDisplayMessage messageSystem)
+        public UDPListener(int portNumber, IDisplayMessage messageSystem, int milliscondsToWaitBetweenCalls = 0)
         {
             // set up a end point that dosn't exclued any possible end points
             EndPoint = new IPEndPoint(IPAddress.Any, 0);
@@ -97,6 +110,9 @@ namespace NetworkingLibaryStandard
 
             // The endpoint client that will be used for all network functionality in this class
             this.EndpointClient = new System.Net.Sockets.UdpClient(portNumber);
+
+            // set the amount of milliseconds to wait between reading the next version
+            MilliscondsToWaitBetweenCalls = milliscondsToWaitBetweenCalls;
         }
 
         /// <summary>
@@ -114,7 +130,7 @@ namespace NetworkingLibaryStandard
         /// <summary>
         /// triggered from the start funciton and run in it's own thread.
         /// </summary>
-        private void Listen()
+        private async void Listen()
         {
             // keep looping over the listener code until the IsConnnected veriable
             // changes or a exception is triggered
@@ -131,8 +147,9 @@ namespace NetworkingLibaryStandard
                         messageSystem.DisplayMessage(MessageHelper.MessageType.Data, returnData);
                     }
 
+                    await Task.Delay(MilliscondsToWaitBetweenCalls);
                     // will activiate the responder if nessarcary 
-                    Responce(returnData, ref this.EndPoint);
+                    //Responce(returnData, ref this.EndPoint);
                 }
             }
             catch (Exception ex)
@@ -187,7 +204,6 @@ namespace NetworkingLibaryStandard
             {
                 this.EndpointClient.Close();
             }
-
         }
     }
 }

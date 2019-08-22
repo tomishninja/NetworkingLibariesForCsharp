@@ -38,8 +38,9 @@
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
             this.Z_label = new System.Windows.Forms.Label();
             this.ZtextBox = new System.Windows.Forms.TextBox();
-            this.ConsoleBufferflowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.UpdateButton = new System.Windows.Forms.Button();
+            this.ConsoleBufferflowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.SendAsJsonCheckBox = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
@@ -53,10 +54,11 @@
             this.flowLayoutPanel1.Controls.Add(this.flowLayoutPanel4);
             this.flowLayoutPanel1.Controls.Add(this.UpdateButton);
             this.flowLayoutPanel1.Controls.Add(this.ConsoleBufferflowLayoutPanel);
+            this.flowLayoutPanel1.Controls.Add(this.SendAsJsonCheckBox);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(800, 450);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(836, 450);
             this.flowLayoutPanel1.TabIndex = 0;
             // 
             // flowLayoutPanel2
@@ -83,6 +85,7 @@
             this.XtextBox.Name = "XtextBox";
             this.XtextBox.Size = new System.Drawing.Size(157, 20);
             this.XtextBox.TabIndex = 1;
+            this.XtextBox.Text = "0";
             // 
             // flowLayoutPanel3
             // 
@@ -108,6 +111,7 @@
             this.YtextBox.Name = "YtextBox";
             this.YtextBox.Size = new System.Drawing.Size(149, 20);
             this.YtextBox.TabIndex = 1;
+            this.YtextBox.Text = "0";
             // 
             // flowLayoutPanel4
             // 
@@ -133,14 +137,7 @@
             this.ZtextBox.Name = "ZtextBox";
             this.ZtextBox.Size = new System.Drawing.Size(157, 20);
             this.ZtextBox.TabIndex = 1;
-            // 
-            // ConsoleBufferflowLayoutPanel
-            // 
-            this.ConsoleBufferflowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.ConsoleBufferflowLayoutPanel.Location = new System.Drawing.Point(3, 45);
-            this.ConsoleBufferflowLayoutPanel.Name = "ConsoleBufferflowLayoutPanel";
-            this.ConsoleBufferflowLayoutPanel.Size = new System.Drawing.Size(797, 405);
-            this.ConsoleBufferflowLayoutPanel.TabIndex = 3;
+            this.ZtextBox.Text = "0";
             // 
             // UpdateButton
             // 
@@ -152,15 +149,36 @@
             this.UpdateButton.UseVisualStyleBackColor = true;
             this.UpdateButton.Click += new System.EventHandler(this.UpdateButton_Click);
             // 
+            // ConsoleBufferflowLayoutPanel
+            // 
+            this.ConsoleBufferflowLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.ConsoleBufferflowLayoutPanel.Location = new System.Drawing.Point(3, 45);
+            this.ConsoleBufferflowLayoutPanel.Name = "ConsoleBufferflowLayoutPanel";
+            this.ConsoleBufferflowLayoutPanel.Size = new System.Drawing.Size(200, 346);
+            this.ConsoleBufferflowLayoutPanel.TabIndex = 3;
+            // 
+            // SendAsJsonCheckBox
+            // 
+            this.SendAsJsonCheckBox.AutoSize = true;
+            this.SendAsJsonCheckBox.Checked = true;
+            this.SendAsJsonCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.SendAsJsonCheckBox.Location = new System.Drawing.Point(209, 45);
+            this.SendAsJsonCheckBox.Name = "SendAsJsonCheckBox";
+            this.SendAsJsonCheckBox.Size = new System.Drawing.Size(85, 17);
+            this.SendAsJsonCheckBox.TabIndex = 6;
+            this.SendAsJsonCheckBox.Text = "SendAsJson";
+            this.SendAsJsonCheckBox.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(836, 450);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Name = "Form1";
             this.Text = "Form1";
             this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel1.PerformLayout();
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
             this.flowLayoutPanel3.ResumeLayout(false);
@@ -185,6 +203,7 @@
         private System.Windows.Forms.TextBox ZtextBox;
         private System.Windows.Forms.FlowLayoutPanel ConsoleBufferflowLayoutPanel;
         private System.Windows.Forms.Button UpdateButton;
+        private System.Windows.Forms.CheckBox SendAsJsonCheckBox;
     }
 }
 

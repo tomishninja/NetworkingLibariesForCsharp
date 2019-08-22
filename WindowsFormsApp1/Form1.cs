@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using DataLibrary;
 using NetworkingLibaryStandard;
 
-namespace UnityTestOutputRig
+namespace WindowsFormsApp1
 {
     public partial class Form1 : Form, IDisplayMessage
     {
@@ -29,12 +29,6 @@ namespace UnityTestOutputRig
         private Object SyncroLock = new object();
 
         /// <summary>
-        /// This object is just responcible for holding and transforming the data
-        /// being sent via the stream.
-        /// </summary>
-        private UnityStreamingDataExample streamingData = new UnityStreamingDataExample();
-
-        /// <summary>
         /// The object that will send out the data
         /// </summary>
         private UDPClient uDPClient;
@@ -42,7 +36,7 @@ namespace UnityTestOutputRig
         /// <summary>
         /// The JSON wrapper object
         /// </summary>
-        private JSONObjectWrapper wrapper;
+        private PrototypeMarkers wrapper;
 
         /// <summary>
         /// 
@@ -67,7 +61,7 @@ namespace UnityTestOutputRig
             timer.Start();
 
             // create a JSON wrapper object that will hold all of the data from the object
-            wrapper = new JSONObjectWrapper();
+            wrapper = new PrototypeMarkers();
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -86,7 +80,7 @@ namespace UnityTestOutputRig
         private void WriteToOuput(string text)
         {
             // write the output to the GUI
-            if(itemsInConsole.Count > maxAmountOfConsoleItems)
+            if (itemsInConsole.Count > maxAmountOfConsoleItems)
             {
                 ConsoleBufferflowLayoutPanel.Controls.Remove(itemsInConsole.Dequeue());
             }
@@ -112,43 +106,35 @@ namespace UnityTestOutputRig
         {
             lock (SyncroLock)
             {
-                wrapper.Set(JSONObjectWrapper.DataValues.HasChanged, 1);
-                wrapper.Set(JSONObjectWrapper.DataValues.PosX, float.Parse(XtextBox.Text));
-                wrapper.Set(JSONObjectWrapper.DataValues.PosY, float.Parse(YtextBox.Text));
-                wrapper.Set(JSONObjectWrapper.DataValues.PosZ, float.Parse(ZtextBox.Text));
+                wrapper.Set(PrototypeMarkers.DataValues.HasChanged, 1);
+                wrapper.Set(PrototypeMarkers.DataValues.MainPosX, float.Parse(XtextBox.Text));
+                wrapper.Set(PrototypeMarkers.DataValues.MainPosY, float.Parse(YtextBox.Text));
+                wrapper.Set(PrototypeMarkers.DataValues.MainPosZ, float.Parse(ZtextBox.Text));
+                wrapper.Set(PrototypeMarkers.DataValues.MarkerOneX, float.Parse(textBoxItemOneX.Text));
+                wrapper.Set(PrototypeMarkers.DataValues.MarkerOneY, float.Parse(textBoxItemOneY.Text));
+                wrapper.Set(PrototypeMarkers.DataValues.MarkerOneZ, float.Parse(textBoxItemOneZ.Text));
+                wrapper.Set(PrototypeMarkers.DataValues.MarkerTwoX, float.Parse(textBoxItemTwoX.Text));
+                wrapper.Set(PrototypeMarkers.DataValues.MarkerTwoY, float.Parse(textBoxItemTwoY.Text));
+                wrapper.Set(PrototypeMarkers.DataValues.MarkerTwoZ, float.Parse(textBoxItemTwoZ.Text));
+                wrapper.Set(PrototypeMarkers.DataValues.MarkerThreeX, float.Parse(textBoxItemThreeX.Text));
+                wrapper.Set(PrototypeMarkers.DataValues.MarkerThreeY, float.Parse(textBoxItemThreeY.Text));
+                wrapper.Set(PrototypeMarkers.DataValues.MarkerThreeZ, float.Parse(textBoxItemThreeZ.Text));
+                wrapper.Set(PrototypeMarkers.DataValues.MarkerFourX, float.Parse(textBoxItemFourX.Text));
+                wrapper.Set(PrototypeMarkers.DataValues.MarkerFourY, float.Parse(textBoxItemFourY.Text));
+                wrapper.Set(PrototypeMarkers.DataValues.MarkerFourZ, float.Parse(textBoxItemFourZ.Text));
+                wrapper.Set(PrototypeMarkers.DataValues.MarkerFiveX, float.Parse(textBoxItemFiveX.Text));
+                wrapper.Set(PrototypeMarkers.DataValues.MarkerFiveY, float.Parse(textBoxItemFiveY.Text));
+                wrapper.Set(PrototypeMarkers.DataValues.MarkerFiveZ, float.Parse(textBoxItemFiveZ.Text));
+                wrapper.Set(PrototypeMarkers.DataValues.MarkerSixX, float.Parse(textBoxItemSixX.Text));
+                wrapper.Set(PrototypeMarkers.DataValues.MarkerSixY, float.Parse(textBoxItemSixY.Text));
+                wrapper.Set(PrototypeMarkers.DataValues.MarkerSixZ, float.Parse(textBoxItemSixZ.Text));
+                //TODO fix this section up so it dosn't wrap the code here but in the other object
+                string json = wrapper.GetJSON(true);
 
-                // Send dat to another stream
-                if (SendAsJsonCheckBox.Checked)
-                {
-                    //TODO fix this section up so it dosn't wrap the code here but in the other object
-                    string json = wrapper.GetJSON(true);
-
-                    //string json = this.streamingData.ToJSON();
-                    uDPClient.Send(json);
-                    this.WriteToOuput(json);
-                    wrapper.Set(JSONObjectWrapper.DataValues.HasChanged, 0);
-                }
-                else
-                {
-                    this.streamingData.posX = float.Parse(XtextBox.Text);
-                    this.streamingData.posY = float.Parse(YtextBox.Text);
-                    this.streamingData.posZ = float.Parse(ZtextBox.Text);
-                    this.streamingData.HasChanged = true;
-
-                    uDPClient.Send(this.streamingData.ToString());
-                }
-            }
-        }
-
-        /// <summary>
-        /// Send data to another device via UDP
-        /// </summary>
-        public void SendStreamingData()
-        {
-            // update the content of the streaming data to be sent
-            lock (SyncroLock)
-            {
-                uDPClient.Send(this.streamingData.ToString());
+                //string json = this.streamingData.ToJSON();
+                uDPClient.Send(json);
+                this.WriteToOuput(json);
+                wrapper.Set(JSONObjectWrapper.DataValues.HasChanged, 0);
             }
         }
 

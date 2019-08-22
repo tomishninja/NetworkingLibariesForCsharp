@@ -87,7 +87,7 @@ namespace NetworkingLibaryStandard
             EndPoint = new IPEndPoint(IPAddress.Any, 0);
 
             // set up the end point client
-            this.Client = new System.Net.Sockets.UdpClient(NetworkingLibaryStandard.DefaultPortNumber);
+            //this.Client = new System.Net.Sockets.UdpClient(NetworkingLibaryStandard.DefaultPortNumber);
         }
 
         public UDPClient(IDisplayMessage messageHelper)
@@ -100,7 +100,7 @@ namespace NetworkingLibaryStandard
             EndPoint = new IPEndPoint(IPAddress.Any, 0);
 
             // set up the end point client
-            this.Client = new System.Net.Sockets.UdpClient(portNumber);
+            //this.Client = new System.Net.Sockets.UdpClient(portNumber);
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace NetworkingLibaryStandard
         /// <param name="portNumber">
         /// A integer that is above zero and ideally less than 655535
         /// </param>
-        public UDPClient(int portNumber, string hostAddress)
+        public UDPClient(string hostAddress1, int portNumber, string hostAddress)
         {
             // if the argument is negivtive then send back an exception
             if (portNumber < 0)
@@ -208,7 +208,7 @@ namespace NetworkingLibaryStandard
             EndPoint = new IPEndPoint(IPAddress.Any, 0);
 
             // set up the end point client
-            this.Client = new UdpClient(NetworkingLibaryStandard.DefaultPortNumber);
+            //this.Client = new UdpClient(NetworkingLibaryStandard.DefaultPortNumber);
         }
 
         /// <summary>
@@ -235,6 +235,36 @@ namespace NetworkingLibaryStandard
             IsListenerRunning = true;
             Thread listenerThread = new Thread(Listen);
             listenerThread.Start();
+        }
+
+        /// <summary>
+        /// Starts this object allowing it to send messages
+        /// to its clients
+        /// </summary>
+        /// <param name="seperateClientPortNumber">
+        /// A int primitive of another port number seperate to the one this device
+        /// is trying to comunicate with
+        /// </param>
+        public void Start(int seperateClientPortNumber)
+        {
+            // if the main object hasn't been made yet make it
+            if (this.Client == null)
+            {
+                Client = new UdpClient(seperateClientPortNumber);
+            }
+
+            // if the program hasn't already started start it
+            if (!Connected)
+            {
+                Client.Connect(this.hostAddress, this.portNumber);
+                this.Connected = true;
+            }
+
+            // set up the listener funcionality
+            // start a listening thread for the object
+            //IsListenerRunning = true;
+            //Thread listenerThread = new Thread(Listen);
+            //listenerThread.Start();
         }
 
         /// <summary>

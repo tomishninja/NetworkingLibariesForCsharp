@@ -132,7 +132,7 @@ namespace ConsoleApp1
         /// </summary>
         void StartListening()
         {
-            UDPListener listener = new UDPListener(this);
+            UDPListener listener = new UDPListener(22115, this);
             listener.Start();
 
             Console.ReadKey();
@@ -193,14 +193,14 @@ namespace ConsoleApp1
             string hostAddress = Console.ReadLine();
 
             Program program = new Program();
-            program.RunUDPClient(hostAddress, false);
+            program.RunUDPClient(hostAddress, true);
         }
 
         void RunUDPClient(string hostAddress, bool sendRandomData)
         {
-            UDPClient client = new UDPClient(hostAddress, this);
+            UDPClient client = new UDPClient(this);
 
-            client.Start();
+            client.Start(22115);
             client.Send("Hello World");
 
             if (sendRandomData)
@@ -227,6 +227,7 @@ namespace ConsoleApp1
             // Disconnect the client
             client.Disconnect();
             Console.WriteLine("Program Stoped Sending Data");
+            Console.ReadKey();
         }
 
         static void SendRandomNumbersStatic()
