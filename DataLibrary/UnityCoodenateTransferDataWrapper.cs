@@ -1,34 +1,21 @@
-﻿namespace DataLibrary
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DataLibrary
 {
-    public class PrototypeMarkers : JSONObjectWrapper
+    class UnityCoodenateTransferDataWrapper
     {
+        readonly CoodenateTransferData data;
+
         public new enum DataValues
         {
-            HasChanged = 0,
-            MainPosX = 1,
-            MainPosY = 2,
-            MainPosZ = 3,
-            MarkerOneX = 4,
-            MarkerOneY = 5,
-            MarkerOneZ = 6,
-            MarkerTwoX = 7,
-            MarkerTwoY = 8,
-            MarkerTwoZ = 9,
-            MarkerThreeX = 10,
-            MarkerThreeY = 11,
-            MarkerThreeZ = 12,
-            MarkerFourX = 13,
-            MarkerFourY = 14,
-            MarkerFourZ = 15,
-            MarkerFiveX = 16,
-            MarkerFiveY = 17,
-            MarkerFiveZ = 18,
-            MarkerSixX = 19,
-            MarkerSixY = 20,
-            MarkerSixZ = 21
+
         }
 
-        public PrototypeMarkers() : base(22)
+        public UnityCoodenateTransferDataWrapper()
         { }
 
         /// <summary>
@@ -43,6 +30,20 @@
         public void Set(DataValues item, float value)
         {
             this.data.values[(int)item] = value;
+        }
+
+        /// <summary>
+        /// Set a object within this objects data storage
+        /// </summary>
+        /// <param name="index">
+        /// The index of the item that needs to be set
+        /// </param>
+        /// <param name="value">
+        /// The new value for the data value chosen
+        /// </param>
+        public void Set(int index, float value)
+        {
+            this.data.values[index] = value;
         }
 
         /// <summary>

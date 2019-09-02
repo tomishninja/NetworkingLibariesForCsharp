@@ -30,6 +30,11 @@ namespace NetworkingLibaryStandard
         readonly IPAddress ipAddress = null;
 
         /// <summary>
+        /// The data this object generated
+        /// </summary>
+        public String data = null;
+
+        /// <summary>
         /// The thead that will hold the listener behaviour
         /// </summary>
         Thread listenerThread = null;
@@ -82,7 +87,6 @@ namespace NetworkingLibaryStandard
         {
             // Buffer for reading data
             Byte[] bytes = new Byte[256];
-            String data = null;
 
             try
             {
@@ -95,30 +99,40 @@ namespace NetworkingLibaryStandard
                     TcpClient client = Server.AcceptTcpClient();
 
                     // clean up the data value
-                    data = null;
+                    data = "";
+                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
                     // this object handels reading and writing
                     NetworkStream stream = client.GetStream();
 
                     // this feild holds the bytes recived by the packet
-                    int i;
+                    //int i;
 
                     // loop though all of the data recived by the client
+                    /*
                     while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
                     {
                         // Translate data into a string (Ascii)
-                        data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-                        Console.WriteLine("Received: {0}", data);
+                        data += System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+                        //Console.WriteLine("Received: {0}", data);
 
                         // process data
-                        data = data.ToUpper();
+                        //data = data.ToUpper();// TODO work out were that is
 
                         // compile more of the message
-                        byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
+                        //byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
 
                         // send a responce
-                        this.Respond(stream, msg, data);
+                        //this.Respond(stream, msg, data);
                     }
+                    */
+                    do
+                    {
+                        int numberOfBytesRead = stream.Read(bytes, 0, bytes.Length);
+                        sb.Append(System.Text.Encoding.ASCII.GetString(bytes, 0, numberOfBytesRead));
+                    } while (stream.DataAvailable);
+
+                    data = sb.ToString();
 
                     // close the client
                     client.Close();

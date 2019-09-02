@@ -19,6 +19,10 @@ namespace ConsoleApp1
 
         bool endFunction = true;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
             // check the outer loop
@@ -302,7 +306,7 @@ namespace ConsoleApp1
 
             Console.ReadKey();
 
-            client.Close();
+            //client.Close();
             listener.Close();
         }
 
