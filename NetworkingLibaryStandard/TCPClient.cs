@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 
 namespace NetworkingLibaryStandard
 {
@@ -114,7 +110,7 @@ namespace NetworkingLibaryStandard
 
                     stream.Write(data, 0, data.Length);
 
-                    Console.WriteLine("Sent: {0}", message);
+                    //Console.WriteLine("Sent: {0}", message);
 
                     // TODO: stuff to be removed
                     //data = new Byte[256];
