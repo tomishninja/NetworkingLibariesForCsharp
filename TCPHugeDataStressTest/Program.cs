@@ -8,28 +8,27 @@ namespace TCPHugeDataStressTest
         static void Main(string[] args)
         {
             TCPListener listener = new TCPListener();
-            TCPClient client = new TCPClient("127.0.0.1");
+            //TCPClient client = new TCPClient(22114, "127.0.0.1");
 
             listener.Start();
-            client.Start();
+            //client.Start();
 
-            client.Send(System.IO.File.ReadAllText(
-                @"D:\\ThomasClarke\\Git\\NetworkingLibariesForCsharp\\TCPHugeDataStressTest\\rabbit.ply"));
-            
+            //client.Send(System.IO.File.ReadAllText(
+                //@"D:\\ThomasClarke\\Git\\NetworkingLibariesForCsharp\\TCPHugeDataStressTest\\rabbit.ply"));
+
+            //client.Close();
+
+            //using (System.IO.StreamWriter sw = System.IO.File.CreateText(
+                //@"D:\\ThomasClarke\\Git\\NetworkingLibariesForCsharp\\TCPHugeDataStressTest\\programOutput.txt"))
+            //{
+                //sw.WriteLine(listener.data);
+            //}
 
             Console.WriteLine(listener.data);
 
-            using (System.IO.StreamWriter sw = System.IO.File.CreateText(
-                @"D:\\ThomasClarke\\Git\\NetworkingLibariesForCsharp\\TCPHugeDataStressTest\\programOutput.txt"))
-            {
-                sw.WriteLine(listener.data);
-            }
-            //client.Close();
             Console.ReadKey();
 
-            listener.Close();
+            //listener.Close();
         }
-
-
     }
 }

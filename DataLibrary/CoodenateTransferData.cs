@@ -246,7 +246,7 @@
         /// <returns>
         /// If the method managed to add the information this method returns 
         /// the index were it placed this information. If it did not manage
-        /// to save this information it will return -1 
+        /// to save this information it will return -1
         /// </returns>
         public int SetStringInfo(string info, int index = -1)
         {

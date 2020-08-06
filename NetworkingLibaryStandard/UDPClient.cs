@@ -128,7 +128,7 @@ namespace NetworkingLibaryStandard
             EndPoint = new IPEndPoint(IPAddress.Any, 0);
 
             // set up the end point client
-            this.Client = new System.Net.Sockets.UdpClient(portNumber);
+            //this.Client = new System.Net.Sockets.UdpClient(portNumber);
         }
 
 
@@ -140,7 +140,7 @@ namespace NetworkingLibaryStandard
         /// <param name="portNumber">
         /// A integer that is above zero and ideally less than 655535
         /// </param>
-        public UDPClient(string hostAddress1, int portNumber, string hostAddress)
+        public UDPClient(int portNumber, string hostAddress)
         {
             // if the argument is negivtive then send back an exception
             if (portNumber < 0)
@@ -220,7 +220,7 @@ namespace NetworkingLibaryStandard
             // if the main object hasn't been made yet make it
             if (this.Client == null)
             {
-                Client = new UdpClient(this.portNumber);
+                Client = new UdpClient(this.portNumber + 1);
             }
 
             // if the program hasn't already started start it

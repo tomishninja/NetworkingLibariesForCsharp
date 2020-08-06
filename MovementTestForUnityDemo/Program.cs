@@ -7,7 +7,6 @@ namespace MovementTestForUnityDemo
 {
     class Program : IDisplayMessage
     {
-
         /// <summary>
         /// 
         /// </summary>

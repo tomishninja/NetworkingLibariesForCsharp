@@ -20,24 +20,18 @@ namespace NetworkingLibaryStandard
         public EchoResponder() { }
 
         /// <summary>
-        /// This function 
+        /// echos back teh message recived from the sender
         /// </summary>
-        /// <param name="messageRecived">
-        /// 
-        /// </param>
-        /// <param name="client">
-        /// 
-        /// </param>
-        /// <param name="endpoint">
-        /// 
-        /// </param>
+        /// <param name="messageRecived"></param>
+        /// <param name="client"></param>
+        /// <param name="endpoint"></param>
         public virtual void Respond(string messageRecived, UdpClient client, ref IPEndPoint endpoint)
         {
             MessageBack(messageRecived, client, ref endpoint);
         }
 
         /// <summary>
-        /// 
+        /// sends a message back to the client in qustion
         /// </summary>
         /// <param name="message">
         /// 

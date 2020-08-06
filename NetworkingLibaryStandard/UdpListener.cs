@@ -136,6 +136,7 @@ namespace NetworkingLibaryStandard
             // changes or a exception is triggered
             try
             {
+                // while no other thread has told this system to disconnnect
                 while (this.IsConnected)
                 {
                     Byte[] receiveBytes = this.EndpointClient.Receive(ref this.EndPoint);

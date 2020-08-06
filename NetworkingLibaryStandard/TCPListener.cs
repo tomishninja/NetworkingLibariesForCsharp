@@ -27,7 +27,7 @@ namespace NetworkingLibaryStandard
         /// <summary>
         /// So far only tested using localhost.
         /// </summary>
-        readonly IPAddress ipAddress = null;
+        readonly IPAddress IpAddress = null;
 
         /// <summary>
         /// The data this object generated
@@ -46,13 +46,25 @@ namespace NetworkingLibaryStandard
         private bool IsListening = false;
 
         /// <summary>
+        /// A object that contains the behaviour for this element.
+        /// </summary>
+        private ITCPResponder Responder;
+
+        /// <summary>
+        /// Message output
+        /// </summary>
+        private IDisplayMessage Output;
+
+        /// <summary>
         /// Defualt constuctor for the TCP object
         /// </summary>
-        public TCPListener()
+        public TCPListener(int portNumber = NetworkingLibaryStandard.DefaultPortNumber, string ipAddress = NetworkingLibaryStandard.LocalHostString, ITCPResponder responder = null, IDisplayMessage output = null)
         {
-            PortNumber = NetworkingLibaryStandard.DefaultPortNumber;
-            ipAddress = IPAddress.Parse(NetworkingLibaryStandard.LocalHostString);
-            this.Server = new TcpListener(this.ipAddress, this.PortNumber);
+            PortNumber = portNumber;
+            IpAddress = IPAddress.Parse(ipAddress);
+            this.Server = new TcpListener(this.IpAddress, this.PortNumber);
+            Responder = responder;
+            Output = output;
         }
 
         /// <summary>
@@ -68,6 +80,8 @@ namespace NetworkingLibaryStandard
             {
                 // start the server
                 this.Server.Start();
+
+                Console.WriteLine("Server started");
 
                 // set the while loop condition for the listen thread to true
                 // so the loop will continue to run indefinatly. 
@@ -92,11 +106,11 @@ namespace NetworkingLibaryStandard
             {
                 // keep listening until the user is done with this object or until a
                 // exception is thrown
+                TcpClient client = Server.AcceptTcpClient();
                 while (IsListening)
                 {
                     // the command will sit and wait until you can connect
                     // You could also user server.AcceptSocket() here.
-                    TcpClient client = Server.AcceptTcpClient();
 
                     // clean up the data value
                     data = "";
@@ -106,37 +120,26 @@ namespace NetworkingLibaryStandard
                     NetworkStream stream = client.GetStream();
 
                     // this feild holds the bytes recived by the packet
-                    //int i;
 
-                    // loop though all of the data recived by the client
-                    /*
-                    while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
-                    {
-                        // Translate data into a string (Ascii)
-                        data += System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-                        //Console.WriteLine("Received: {0}", data);
-
-                        // process data
-                        //data = data.ToUpper();// TODO work out were that is
-
-                        // compile more of the message
-                        //byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
-
-                        // send a responce
-                        //this.Respond(stream, msg, data);
-                    }
-                    */
-                    do
+                    while (stream.DataAvailable || data == "")
                     {
                         int numberOfBytesRead = stream.Read(bytes, 0, bytes.Length);
                         sb.Append(System.Text.Encoding.ASCII.GetString(bytes, 0, numberOfBytesRead));
-                    } while (stream.DataAvailable);
+                        data = sb.ToString();
+                    }
+                    
+                    if (Output != null)
+                    {
+                        Output.DisplayMessage(MessageHelper.MessageType.Data, data);
+                    }
 
-                    data = sb.ToString();
-
+                    if (Responder != null)
+                    {
+                        Responder.Respond(stream, data);
+                    }
                     // close the client
-                    client.Close();
                 }
+               client.Close();
             }
             catch (SocketException exc)
             {
@@ -147,29 +150,6 @@ namespace NetworkingLibaryStandard
                 // stop the server after an before this method ends
                 Server.Stop();
             }
-        }
-
-        /// <summary>
-        /// This method is designed to be inherited and should not be called 
-        /// by the user as it is not desinged for it.
-        /// 
-        /// This method is designed to respond to a message from the client.
-        /// by default this method will do nothing.
-        /// </summary>
-        /// <param name="stream">
-        /// The network stream object recived from the client sending the data
-        /// </param>
-        /// <param name="msg">
-        /// the bytes that created the message
-        /// </param>
-        /// <param name="data">
-        /// A string represention of the message reviced
-        /// </param>
-        public virtual void Respond(NetworkStream stream, byte[] msg, string data)
-        {
-            // Send back a response.
-            //stream.Write(msg, 0, msg.Length);
-            //Console.WriteLine("Sent: {0}", data);
         }
 
         /// <summary>

@@ -11,7 +11,7 @@ namespace UnityTestNeedleAndMarkerPacketTransfer
         /// <summary>
         /// A setting for the maxiumum amount of items in the console
         /// </summary>
-        public const int maxAmountOfConsoleItems = 10;
+        public const int maxAmountOfConsoleItems = 12;
 
         /// <summary>
         /// Works in parrell to the flow layout manager allowing me to remove unwanted lables
@@ -61,7 +61,7 @@ namespace UnityTestNeedleAndMarkerPacketTransfer
             timer.Start();
 
             // create a JSON wrapper object that will hold all of the data from the object
-            wrapper = new CoodenateTransferData(7, 1);
+            wrapper = new CoodenateTransferData(11, 1);
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -108,15 +108,19 @@ namespace UnityTestNeedleAndMarkerPacketTransfer
             {
                 wrapper.SetBedVector(float.Parse(XtextBox.Text), float.Parse(YtextBox.Text), float.Parse(ZtextBox.Text));
 
-                wrapper.SetMarkerData(0, "0", float.Parse(textBoxItemOneX.Text), float.Parse(textBoxItemOneY.Text), float.Parse(textBoxItemOneZ.Text));
-                wrapper.SetMarkerData(1, "1", float.Parse(textBoxItemTwoX.Text), float.Parse(textBoxItemTwoY.Text), float.Parse(textBoxItemTwoZ.Text));
-                wrapper.SetMarkerData(2, "2",  float.Parse(textBoxItemThreeX.Text), float.Parse(textBoxItemThreeY.Text), float.Parse(textBoxItemThreeZ.Text));
-                wrapper.SetMarkerData(3, "3", float.Parse(textBoxItemFourX.Text), float.Parse(textBoxItemFourY.Text), float.Parse(textBoxItemFourZ.Text));
-                wrapper.SetMarkerData(4, "4", float.Parse(textBoxItemFiveX.Text), float.Parse(textBoxItemFiveY.Text), float.Parse(textBoxItemFiveZ.Text));
-                wrapper.SetMarkerData(5, "5", float.Parse(textBoxItemSixX.Text), float.Parse(textBoxItemSixY.Text), float.Parse(textBoxItemSixZ.Text));
-                wrapper.SetMarkerData(6, "6", float.Parse(textBoxItemSevenX.Text), float.Parse(textBoxItemSevenY.Text), float.Parse(textBoxItemSevenZ.Text));
+                wrapper.SetMarkerData(0, textBoxItemOneName.Text, float.Parse(textBoxItemOneX.Text), float.Parse(textBoxItemOneY.Text), float.Parse(textBoxItemOneZ.Text));
+                wrapper.SetMarkerData(1, textBoxItemTwoName.Text, float.Parse(textBoxItemTwoX.Text), float.Parse(textBoxItemTwoY.Text), float.Parse(textBoxItemTwoZ.Text));
+                wrapper.SetMarkerData(2, textBoxItemThreeName.Text,  float.Parse(textBoxItemThreeX.Text), float.Parse(textBoxItemThreeY.Text), float.Parse(textBoxItemThreeZ.Text));
+                wrapper.SetMarkerData(3, textBoxItemFourName.Text, float.Parse(textBoxItemFourX.Text), float.Parse(textBoxItemFourY.Text), float.Parse(textBoxItemFourZ.Text));
+                wrapper.SetMarkerData(4, textBoxItemFiveName.Text, float.Parse(textBoxItemFiveX.Text), float.Parse(textBoxItemFiveY.Text), float.Parse(textBoxItemFiveZ.Text));
+                wrapper.SetMarkerData(5, textBoxItemSixName.Text, float.Parse(textBoxItemSixX.Text), float.Parse(textBoxItemSixY.Text), float.Parse(textBoxItemSixZ.Text));
+                wrapper.SetMarkerData(6, textBoxItemSevenName.Text, float.Parse(textBoxItemSevenX.Text), float.Parse(textBoxItemSevenY.Text), float.Parse(textBoxItemSevenZ.Text));
+                wrapper.SetMarkerData(7, textBoxItemEightName.Text, float.Parse(textBoxItemEightX.Text), float.Parse(textBoxItemEightY.Text), float.Parse(textBoxItemEightZ.Text));
+                wrapper.SetMarkerData(8, textBoxItemNineName.Text, float.Parse(textBoxItemNineX.Text), float.Parse(textBoxItemNineY.Text), float.Parse(textBoxItemNineZ.Text));
+                wrapper.SetMarkerData(9, textBoxItemTenName.Text, float.Parse(textBoxItemTenX.Text), float.Parse(textBoxItemTenY.Text), float.Parse(textBoxItemTenZ.Text));
+                wrapper.SetMarkerData(10, textBoxItemElevenName.Text, float.Parse(textBoxItemElevenX.Text), float.Parse(textBoxItemElevenY.Text), float.Parse(textBoxItemElevenZ.Text));
                 
-                wrapper.SetNeedleInfo(0, "Needle", float.Parse(textBoxNeedleOneAX.Text), float.Parse(textBoxNeedleOneAY.Text), float.Parse(textBoxNeedleOneAZ.Text),
+                wrapper.SetNeedleInfo(0, textBoxNeedleOneName.Text, float.Parse(textBoxNeedleOneAX.Text), float.Parse(textBoxNeedleOneAY.Text), float.Parse(textBoxNeedleOneAZ.Text),
                     float.Parse(textBoxNeedleOneXB.Text), float.Parse(textBoxNeedleOneBY.Text), float.Parse(textBoxNeedleOneBZ.Text));
 
                 string json = wrapper.ToUnityJSON();

@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using NetworkingLibaryStandard;
 using LSLFramework;
+using System.IO;
 
 namespace ConsoleApp1
 {
@@ -28,7 +26,7 @@ namespace ConsoleApp1
             // check the outer loop
             bool outerLoopCheck = false;
             // this is the amount of choices the user has to pick from
-            int amountOfChoices = 8;
+            int amountOfChoices = 12;
             // This is the selection the user made of the system. its set out of bounds by default
             int choice = amountOfChoices + 1;
             do
@@ -49,6 +47,10 @@ namespace ConsoleApp1
                     Console.WriteLine("6: Run UDP Client");
                     Console.WriteLine("7: Send Random Data Via UDP Client");
                     Console.WriteLine("8: LSL Recive Floats Test");
+                    Console.WriteLine("9: LSL Get Data From Python");
+                    Console.WriteLine("10: NeverEndingTCP");
+                    Console.WriteLine("11: Send exampleMeVisOutputToDevice");
+                    Console.WriteLine("12: Work Flow Example For TCP");
 
                     // Read the Users Input
                     string input = Console.ReadLine();
@@ -70,7 +72,7 @@ namespace ConsoleApp1
                         Console.WriteLine("Please Don't be smart");
                     }
 
-                } while (choice > amountOfChoices && choice < 0);
+                } while (choice > amountOfChoices || choice < 0);
 
                 // to get out of that loop the choice must have been valid
 
@@ -101,11 +103,37 @@ namespace ConsoleApp1
                     case 8:
                         StartLSLInletDemo();
                         break;
+                    case 9:
+                        StartGetPythonDataDemo();
+                        break;
+                    case 10:
+                        NeverEndingTcpDemo();
+                        break;
+                    case 11:
+                        SendAMeVisLabMessageUDP();
+                        break;
+                    case 12:
+                        WorkFlowExampleForTCP();
+                        break;
                     default:
                         outerLoopCheck = true;
                         break;
                 }
             } while (outerLoopCheck);
+        }
+
+        private static void StartGetPythonDataDemo()
+        {
+            Program program = new Program();
+            program.GetPythonDataDemo();
+        }
+
+        public void GetPythonDataDemo()
+        {
+            UDPListener pyListener = new UDPListener(5005, this);
+            pyListener.Start();
+
+            Console.ReadKey();
         }
 
         public static void StartLSLInletDemo()
@@ -306,8 +334,86 @@ namespace ConsoleApp1
 
             Console.ReadKey();
 
-            //client.Close();
+            client.Close();
             listener.Close();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        static void NeverEndingTcpDemo()
+        {
+            string plyFileContent = File.ReadAllText("ExampleOutputOfOtherSystem.txt");
+            string JSONFileContent = "World";//File.ReadAllText("C:/Users/z004344b/GitRepos/NetworkingLibariesForCsharp/ConsoleApp1/TestData/DemoPrototypeOutput.json");
+
+            TCPEchoResponderForHugeAmountOfData respondingLogic = new TCPEchoResponderForHugeAmountOfData(plyFileContent);
+            TCPEchoResponder echoResponder = new TCPEchoResponder();
+            HugeDataStucureNetworkingPackets largeDataVersion = new HugeDataStucureNetworkingPackets();
+
+            largeDataVersion.AddData("PlyFile", plyFileContent);
+            largeDataVersion.AddData(Tags.tageNames[2], JSONFileContent);
+
+            Program program = new Program();
+
+            TCPListener listener = new TCPListener(responder: largeDataVersion, output: program);
+            //TCPClient client = new TCPClient(responder: largeDataVersion);
+
+            listener.Start();
+
+            //client.Start(true, JSONFileContent, true);
+
+            Thread.Sleep(400);
+            largeDataVersion.AddData("PlyFile", JSONFileContent);
+
+            //Console.ReadKey();
+
+            //Console.WriteLine(listener.data);
+
+            Console.ReadKey();
+
+            listener.Close();
+        }
+
+        static void WorkFlowExampleForTCP()
+        {
+            string JSONFileContent = File.ReadAllText("ExampleOutputOfOtherSystem.txt");
+            string PlyFileForMedicalData = File.ReadAllText("VenricalsLowPolyMeVis.ply");
+            string PlyFileForAvatar = File.ReadAllText("lowPolyAvatar.ply");
+            
+            //TODO update or change this class below to deal with an expected flow of data that can be sent.
+            //HugeDataStucureNetworkingPackets largeDataVersion = new HugeDataStucureNetworkingPackets();
+
+            UnityWorkFlowExample logic = new UnityWorkFlowExample(PlyFileForAvatar, PlyFileForMedicalData, JSONFileContent);
+
+            Program program = new Program();
+            TCPListener listener = new TCPListener(responder: logic, output: program);
+            
+            //NetworkingBehaviourHandler unityTestLogic = new NetworkingBehaviourHandler();
+            //TCPClient client = new TCPClient(responder: unityTestLogic);
+
+            listener.Start();
+            //client.Start(true, "Starting");
+
+            Console.ReadKey();
+
+            listener.Close();
+            //client.Close();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        static void SendAMeVisLabMessageUDP()
+        {
+            string plyFileContent = File.ReadAllText("ADemoOutputFromChristiansDemo.txt");
+
+            UDPClient client = new UDPClient();
+
+            client.Start();
+
+            client.Send(plyFileContent);
+
+            client.Close();
         }
 
         /// <summary>

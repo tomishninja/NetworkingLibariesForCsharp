@@ -11,7 +11,7 @@ namespace NetworkingLibaryStandard
     /// must be placed inoto the servers constuctor inorder to
     /// be functional.
     /// </summary>
-    interface IResponder
+    public interface IResponder
     {
         /// <summary>
         /// Allows for responces to be sent back to the client in a mannor that the application deems fit
