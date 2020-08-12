@@ -5,7 +5,7 @@
     /// send various interactions. More still needs to be done with this class
     /// before its intergartion
     /// </summary>
-    public interface IResponder
+    public interface IUDPResponder
     {
         /// <summary>
         /// This method will be called to determine various 

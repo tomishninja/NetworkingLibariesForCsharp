@@ -101,11 +101,12 @@ namespace NetworkingLibaryStandard
         {
             // Buffer for reading data
             Byte[] bytes = new Byte[256];
-
+            
+            // keep listening until the user is done with this object or until a
+            // exception is thrown
             try
             {
-                // keep listening until the user is done with this object or until a
-                // exception is thrown
+                
                 TcpClient client = Server.AcceptTcpClient();
                 while (IsListening)
                 {
@@ -119,26 +120,32 @@ namespace NetworkingLibaryStandard
                     // this object handels reading and writing
                     NetworkStream stream = client.GetStream();
 
-                    // this feild holds the bytes recived by the packet
+                    
 
                     while (stream.DataAvailable || data == "")
                     {
+                        // this feild holds the bytes recived by the packet
                         int numberOfBytesRead = stream.Read(bytes, 0, bytes.Length);
+
+                        // Convert the bytes back to a string and save them to the output buffer
                         sb.Append(System.Text.Encoding.ASCII.GetString(bytes, 0, numberOfBytesRead));
                         data = sb.ToString();
                     }
 
+                    // if an output option exists output the message recived
                     if (Output != null)
                     {
                         Output.DisplayMessage(MessageHelper.MessageType.Data, data);
                     }
 
+                    // respond to the current message
                     if (Responder != null)
                     {
                         Responder.Respond(stream, data);
                     }
-                    // close the client
                 }
+                
+                // close the client
                 client.Close();
             }
             catch (SocketException exc)
@@ -165,6 +172,5 @@ namespace NetworkingLibaryStandard
             // this will stop the loop created by the Listen function
             IsListening = false;
         }
-
     }
 }

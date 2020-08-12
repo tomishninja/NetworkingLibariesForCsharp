@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Networking.Sockets;
 
 namespace NetworkingLibrary
@@ -12,7 +8,7 @@ namespace NetworkingLibrary
     /// This object will just provide the logic to send back a 
     /// responce back to the system that sent this one
     /// </summary>
-    public class EchoResponder : IResponder
+    public class EchoResponder : IUDPResponder, ITCPResponder
     {
         public async void Respond(string MessageRecived, StreamSocketListenerConnectionReceivedEventArgs args)
         {
@@ -25,6 +21,11 @@ namespace NetworkingLibrary
                     await streamWriter.FlushAsync();
                 }
             }
+        }
+
+        public string Respond(ref string data)
+        {
+            return data;
         }
     }
 }

@@ -143,9 +143,9 @@ namespace App1
             // keep sending messages constantly
             client.SendContinuiously(msg);
 
-            DateTime start = DateTime.Now;
-            start.AddMinutes(1);
-            while (DateTime.Now < start) { }
+            DateTime end = DateTime.Now;
+            end.AddMinutes(1);
+            while (DateTime.Now < end) { }
         }
 
         public void RunTCPHelloWorldTest(bool withResponce)

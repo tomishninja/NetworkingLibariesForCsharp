@@ -13,6 +13,12 @@ namespace NetworkingLibrary
         private readonly IDisplayMessage messageService = null;
 
         /// <summary>
+        /// Calls a objects made by the user that will create a message 
+        /// for the user to work with a continious 
+        /// </summary>
+        private readonly ITCPResponder responder = null;
+
+        /// <summary>
         /// This service holds the port number that this system will be running on.
         /// </summary>
         private readonly string portNumber = "0";
@@ -27,63 +33,34 @@ namespace NetworkingLibrary
         /// </summary>
         private Windows.Networking.Sockets.StreamSocket streamSocket = null;
 
-        public TCPClient()
-        {
-            this.portNumber = NetworkingLibaryCore.DefaultServiceName;
-            this.hostName = new Windows.Networking.HostName(NetworkingLibaryCore.LocalHostName);
-        }
+        /// <summary>
+        /// Used for the continuious listener version
+        /// fucntion. This value is desinged to be set by another 
+        /// thread to end the current listener. 
+        /// </summary>
+        private bool IsListening = false;
 
-        public TCPClient(IDisplayMessage messageService)
-        {
-            this.portNumber = NetworkingLibaryCore.DefaultServiceName;
-            this.hostName = new Windows.Networking.HostName(NetworkingLibaryCore.LocalHostName);
-            this.messageService = messageService;
-        }
-
-        public TCPClient(string portNumber)
+        /// <summary>
+        /// Creates a TCP client object for use, 
+        /// </summary>
+        /// <param name="hostName">
+        /// 
+        /// </param>
+        /// <param name="portNumber">
+        /// 
+        /// </param>
+        /// <param name="messageService">
+        /// 
+        /// </param>
+        /// <param name="responder">
+        /// 
+        /// </param>
+        public TCPClient(string hostName = NetworkingLibaryCore.LocalHostName, string portNumber = NetworkingLibaryCore.DefaultServiceName, IDisplayMessage messageService = null, ITCPResponder responder = null)
         {
             this.portNumber = portNumber;
-            this.hostName = new Windows.Networking.HostName(NetworkingLibaryCore.LocalHostName);
-        }
-
-        public TCPClient(string portNumber, IDisplayMessage messageService)
-        {
-            this.portNumber = portNumber;
+            this.hostName = new Windows.Networking.HostName(hostName);
             this.messageService = messageService;
-            this.hostName = new Windows.Networking.HostName(NetworkingLibaryCore.LocalHostName);
-        }
-
-        public TCPClient(string portNumber, string hostname)
-        {
-            this.portNumber = portNumber;
-            this.hostName = new Windows.Networking.HostName(NetworkingLibaryCore.LocalHostName);
-        }
-
-        public TCPClient(string portNumber, string hostName, IDisplayMessage messageService)
-        {
-            this.portNumber = portNumber;
-            this.messageService = messageService;
-            this.hostName = new Windows.Networking.HostName(NetworkingLibaryCore.LocalHostName);
-        }
-
-        public TCPClient(Windows.Networking.HostName hostname)
-        {
-            this.portNumber = NetworkingLibaryCore.DefaultServiceName;
-            this.hostName = hostname;
-        }
-
-        public TCPClient(Windows.Networking.HostName hostname, IDisplayMessage messageService)
-        {
-            this.portNumber = NetworkingLibaryCore.DefaultServiceName;
-            this.messageService = messageService;
-            this.hostName = hostname;
-        }
-
-        public TCPClient(int portNumber, string hostname, IDisplayMessage messageService)
-        {
-            this.portNumber = portNumber.ToString();
-            this.messageService = messageService;
-            this.hostName = new Windows.Networking.HostName(hostname);
+            this.responder = responder;
         }
 
         /// <summary>
@@ -102,8 +79,10 @@ namespace NetworkingLibrary
                     }
                 }
 
-                this.Output(MessageHelper.MessageType.Status, string.Format("client received the response: \"{0}\" ", response));
+
+                //this.Output(MessageHelper.MessageType.Status, string.Format("client received the response: \"{0}\" ", response));
                 this.Output(MessageHelper.MessageType.Data, response);
+
             }
         }
 
@@ -117,6 +96,7 @@ namespace NetworkingLibrary
             // Send a request
             using (Stream outputStream = streamSocket.OutputStream.AsStreamForWrite())
             {
+                // 
                 using (var streamWriter = new StreamWriter(outputStream))
                 {
                     await streamWriter.WriteLineAsync(message);
@@ -128,6 +108,76 @@ namespace NetworkingLibrary
             this.Output(MessageHelper.MessageType.Status, string.Format("client sent the request: \"{0}\"", message));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        public async Task SendContinuiously(string message)
+        {
+            // this will temperarly hold the responce string
+            string responce; // may be
+
+            // set the is listening value to true while this is going on
+            IsListening = true;
+
+
+            try
+            {
+                // this will keep running this fuction until another thead stops it
+                while (IsListening)
+                {
+                    // Create the StreamSocket and establish a connection to the echo server.
+                    streamSocket = new Windows.Networking.Sockets.StreamSocket();
+
+                    // The server hostname that we will be establishing a connection to. In this example, the server and client are in the same process.
+                    await streamSocket.ConnectAsync(hostName, this.portNumber);
+
+                    // send the message
+                    using (Stream outputStream = streamSocket.OutputStream.AsStreamForWrite())
+                    {
+                        // 
+                        using (var streamWriter = new StreamWriter(outputStream))
+                        {
+                            await streamWriter.WriteLineAsync(message);
+                            await streamWriter.FlushAsync();
+                        }
+                    }
+
+                    // wait for the message
+                    using (Stream inputStream = streamSocket.InputStream.AsStreamForRead())
+                    {
+                        using (StreamReader streamReader = new StreamReader(inputStream))
+                        {
+                            responce = await streamReader.ReadLineAsync();
+                        }
+                    }
+
+                    message = this.responder.Respond(ref responce);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Windows.Networking.Sockets.SocketErrorStatus webErrorStatus = Windows.Networking.Sockets.SocketError.GetStatus(ex.GetBaseException().HResult);
+                this.Output(MessageHelper.MessageType.Exception, webErrorStatus.ToString() != "Unknown" ? webErrorStatus.ToString() : ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Stops sending messages to the other device
+        /// </summary>
+        public void StopSendingContinuiously()
+        {
+            IsListening = false;
+            this.Close();
+        }
+
+        /// <summary>
+        /// Just sends a single message to another device
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public async Task Send(string message)
         {
             try

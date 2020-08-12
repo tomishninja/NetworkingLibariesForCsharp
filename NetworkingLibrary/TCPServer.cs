@@ -19,55 +19,14 @@ namespace NetworkingLibrary
         /// <summary>
         /// this object will contain the method for how this class should respond
         /// </summary>
-        private readonly IResponder responderObject = null;
+        private readonly ITCPResponder responderObject = null;
 
         /// <summary>
         /// 
         /// </summary>
         private Windows.Networking.Sockets.StreamSocketListener streamSocketListener = null;
 
-        public TCPServer()
-        {
-            this.portNumber = NetworkingLibaryCore.DefaultServiceName;
-        }
-
-        public TCPServer(IDisplayMessage messageService)
-        {
-            this.portNumber = NetworkingLibaryCore.DefaultServiceName;
-            this.messageService = messageService;
-        }
-
-        public TCPServer(string portNumber)
-        {
-            this.portNumber = portNumber;
-        }
-
-        public TCPServer(string portNumber, IDisplayMessage messageService)
-        {
-            this.portNumber = portNumber;
-            this.messageService = messageService;
-        }
-
-        public TCPServer(IResponder responder)
-        {
-            this.portNumber = NetworkingLibaryCore.DefaultServiceName;
-            this.responderObject = responder;
-        }
-
-        public TCPServer(IDisplayMessage messageService, IResponder responder)
-        {
-            this.portNumber = NetworkingLibaryCore.DefaultServiceName;
-            this.messageService = messageService;
-            this.responderObject = responder;
-        }
-
-        public TCPServer(string portNumber, IResponder responder)
-        {
-            this.portNumber = portNumber;
-            this.responderObject = responder;
-        }
-
-        public TCPServer(string portNumber, IDisplayMessage messageService, IResponder responder)
+        public TCPServer(string portNumber = NetworkingLibaryCore.DefaultServiceName, IDisplayMessage messageService = null, ITCPResponder responder = null)
         {
             this.portNumber = portNumber;
             this.messageService = messageService;
@@ -77,7 +36,7 @@ namespace NetworkingLibrary
         /// <summary>
         /// Start the server and collect and respond to any incoming streams
         /// </summary>
-        public async void Start()
+        public void Start()
         {
             try
             {
@@ -87,12 +46,14 @@ namespace NetworkingLibrary
                 streamSocketListener.ConnectionReceived += this.ConnectionReceived;
 
                 // Start listening for incoming TCP connections on the specified port. You can specify any port that's not currently in use.
-                await streamSocketListener.BindServiceNameAsync(this.portNumber);
+                streamSocketListener.BindServiceNameAsync(this.portNumber);
 
                 this.Output(MessageHelper.MessageType.Status, "server is listening on port \"" + this.portNumber + "\"");
             }
             catch (Exception ex)
             {
+                // Lots of scary looking code here :/
+                // all that it says below is if you don't know what is going on write to buffer
                 Windows.Networking.Sockets.SocketErrorStatus webErrorStatus = Windows.Networking.Sockets.SocketError.GetStatus(ex.GetBaseException().HResult);
                 this.Output(MessageHelper.MessageType.Exception, webErrorStatus.ToString() != "Unknown" ? webErrorStatus.ToString() : ex.Message);
             }
@@ -135,18 +96,27 @@ namespace NetworkingLibrary
                 request = await streamReader.ReadLineAsync();
             }
 
-            this.Output(MessageHelper.MessageType.Status, string.Format("server received the request: \"{0}\"", request));
             this.Output(MessageHelper.MessageType.Data, request);
-            
+
             // if responder exists then respond else don't bother
             if (responderObject != null)
             {
-                responderObject.Respond(request, args);
+                using (var streamWriter = new StreamWriter(args.Socket.OutputStream.AsStreamForWrite()))
+                {
+                    string responce = responderObject.Respond(ref request);
 
-                this.Output(MessageHelper.MessageType.Status, string.Format("server acted on the response: \"{0}\" appropiatly", request));
+                    // call the responder object and send back the responce
+                    streamWriter.WriteLine(responce);
+
+                    // output the message to the helper if it exists
+                    this.Output(MessageHelper.MessageType.Status, string.Format("server acted on the response: \"{0}\" appropiatly", responce));
+                }
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Close()
         {
             this.streamSocketListener.Dispose();

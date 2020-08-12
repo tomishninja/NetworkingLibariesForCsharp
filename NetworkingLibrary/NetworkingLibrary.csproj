@@ -124,7 +124,8 @@
     <Compile Include="Connection.cs" />
     <Compile Include="EchoResponder.cs" />
     <Compile Include="iDisplayMessage.cs" />
-    <Compile Include="IResponder.cs" />
+    <Compile Include="ITCPResponder.cs" />
+    <Compile Include="IUDPResponder.cs" />
     <Compile Include="ListenerSocket.cs" />
     <Compile Include="MessageHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
