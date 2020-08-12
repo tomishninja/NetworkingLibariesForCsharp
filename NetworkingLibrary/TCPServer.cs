@@ -101,9 +101,11 @@ namespace NetworkingLibrary
             // if responder exists then respond else don't bother
             if (responderObject != null)
             {
+                // deal with the responce appropriately
+                string responce = responderObject.Respond(ref request);
+
                 using (var streamWriter = new StreamWriter(args.Socket.OutputStream.AsStreamForWrite()))
                 {
-                    string responce = responderObject.Respond(ref request);
 
                     // call the responder object and send back the responce
                     streamWriter.WriteLine(responce);
@@ -115,7 +117,7 @@ namespace NetworkingLibrary
         }
 
         /// <summary>
-        /// 
+        /// Close the sockets and move on
         /// </summary>
         public void Close()
         {
